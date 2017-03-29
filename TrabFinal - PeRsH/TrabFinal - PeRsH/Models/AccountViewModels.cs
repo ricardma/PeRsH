@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TrabFinal___PeRsH.Models
 {
@@ -64,6 +66,15 @@ namespace TrabFinal___PeRsH.Models
 
     public class RegisterViewModel
     {
+        //CAMPOS ESPECÍFICOS DO UTILIZADOR
+        [Required]
+        [Display(Name = "Nickname")]
+        public string Nickname { get; set; }
+
+        [Required]
+        [Column(TypeName = "date")]
+        public DateTime? dataNasc { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
