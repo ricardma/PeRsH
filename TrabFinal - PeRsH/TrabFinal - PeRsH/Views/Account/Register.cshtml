@@ -1,6 +1,8 @@
 ﻿@model TrabFinal___PeRsH.Models.RegisterViewModel
 @{
     ViewBag.Title = "Register";
+    string[] meses = new string[12] { "Janeiro", "Fevereiro","Março","Abril","Maio","Junho","Julho",
+        "Agosto","Setembro","Outubro","Novembro","Dezembro" };
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -10,7 +12,44 @@
     @Html.AntiForgeryToken()
     <h4>Create a new account.</h4>
     <hr />
+    if (ViewBag.erro == null)
+    {
+
+    }
+    else
+    {
+    <div class="text-danger validation-summary-errors" data-valmsg-summary="true"><ul><li>@ViewBag.erro</li></ul></div>
+    }
     @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Nickname, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Nickname, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.Label("Data de Nascimento", new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            Dia: <select name="diaSel" class="btn btn-primary dropdown-toggle" style="background-color:white;color:black;border:1px solid #bbbbbb">
+                @for(int i = 1; i <= 31; i++)
+                {
+                    <option id="@i" value="@i">@i</option>
+                }
+            </select>
+            Mês: <select name="mesSel" class="btn btn-primary dropdown-toggle" style="background-color:white;color:black;border:1px solid #bbbbbb">
+                @for (int i = 0; i < meses.Length; i++)
+                {
+                    <option id="@meses[i]" value="@meses[i]">@meses[i]</option>
+                }
+            </select>
+            Ano: <select name="anoSel" class="btn btn-primary dropdown-toggle" style="background-color:white;color:black;border:1px solid #bbbbbb">
+                @for (int i = 1900; i <= 2100; i++)
+                {
+                    <option id="@i" value="@i">@i</option>
+                }
+            </select>
+        </div>
+    </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">

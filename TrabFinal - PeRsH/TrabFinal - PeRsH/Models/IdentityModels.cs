@@ -18,7 +18,7 @@ namespace TrabFinal___PeRsH.Models
 
         [Required]
         [Column(TypeName = "date")]
-        public DateTime? dataNasc { get; set; }
+        public DateTime dataNasc { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

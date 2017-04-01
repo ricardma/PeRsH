@@ -147,13 +147,56 @@ namespace TrabFinal___PeRsH.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterViewModel model, string diaSel, string mesSel, string anoSel)
         {
+            int ano = Convert.ToInt16(anoSel);
+            string mes = Convert.ToString(mesSel);
+            int dia = Convert.ToInt16(diaSel);
+
+            bool bissexto = false;
+            if (ano % 4 == 0)
+            {
+                if(ano % 100 == 0)
+                {
+                    if (ano % 400 == 0)
+                    {
+                        bissexto = true;
+                    }
+                }
+            }
+            if (bissexto==true)
+            {
+                if (mes.Equals("Fevereiro")){
+                    if (dia > 29)
+                    {
+                        ViewBag.erro = "Erro! Insira uma data válida!";
+                        return View(model);
+                    }
+                }
+            }else
+            {
+                if (mes.Equals("Fevereiro"))
+                {
+                    if (dia > 28)
+                    {
+                        ViewBag.erro = "Erro! Insira uma data válida!";
+                        return View(model);
+                    }
+                }
+            }
+            if(mes.Equals("Abril") || mes.Equals("Junho") || mes.Equals("Setembro") || mes.Equals("Novembro"))
+            {
+                if (dia > 30)
+                {
+                    ViewBag.erro = "Erro! Insira uma data válida!";
+                    return View(model);
+                }
+            }
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser {
                     Nickname = model.Nickname,
-                    dataNasc = model.dataNasc,
+                    dataNasc = DateTime.Parse(dia + "-" + mes + "-" + ano),
                     UserName = model.Email,
                     Email = model.Email };
                 var result = await UserManager.CreateAsync(user, model.Password);
