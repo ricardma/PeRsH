@@ -47,13 +47,6 @@ namespace TrabFinal___PeRsH.Models
         //********************************
         //*CRIACAO DAS CHAVES FORASTEIRAS*
         //********************************
-        //cria o atributo que irá funcionar como FK na BD
-        //e relaciona-o com o atributo a seguir
-        [ForeignKey("Tema")]
-        [Display(Name = "Temas")]
-        public int TemaFK { get; set; }
-        //Relaciona o objeto DISCUSSOES com um TEMA
-        public virtual Temas Tema { get; set; }
 
         //cria o atributo que irá funcionar como FK na BD
         //e relaciona-o com o atributo a seguir

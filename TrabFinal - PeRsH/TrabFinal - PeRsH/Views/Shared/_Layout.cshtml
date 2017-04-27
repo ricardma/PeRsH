@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - PeRsH</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar navbar-inverse navbar-fixed-top" style="background-color:#428bca;border:1px solid #428bca">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -17,13 +17,13 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.Label("PeRsH", htmlAttributes: new { area = "", @class = "navbar-brand", @style = "color:white;font-family:Calibri;font-size:25px" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                    <li>@Html.ActionLink("Início", "Index", "Home",htmlAttributes: new { @style = "color:white;font-family:Calibri;font-size:15px" })</li>
+                    <li>@Html.ActionLink("Sobre", "About", "Home", htmlAttributes: new { @style = "color:white;font-family:Calibri;font-size:15px" })</li>
+                    <li>@Html.ActionLink("Contactos", "Contact", "Home", htmlAttributes: new { @style = "color:white;font-family:Calibri;font-size:15px" })</li>
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
@@ -31,10 +31,6 @@
     </div>
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
