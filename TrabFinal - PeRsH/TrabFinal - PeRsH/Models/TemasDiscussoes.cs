@@ -11,6 +11,9 @@ namespace TrabFinal___PeRsH.Models
     //Representará o relacionamento entre a tabela TEMAS e DISCUSSOES
     public class TemasDiscussoes : DbContext
     {
+        [Key]
+        public int idTemasDiscussoes { get; set; }
+
         //cria o atributo que irá funcionar como FK na BD
         //e relaciona-o com o atributo a seguir
         [ForeignKey("Tema")]
