@@ -17,6 +17,7 @@ namespace TrabFinal___PeRsH.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public AccountController()
         {
@@ -68,6 +69,10 @@ namespace TrabFinal___PeRsH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
+            //procurar o login na base de dados
+            string nick = (from utilizador in db.Users where (utilizador.Email == model.Email)  select utilizador.Nickname).First();
+            Session["user"] = nick;
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -79,6 +84,7 @@ namespace TrabFinal___PeRsH.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
