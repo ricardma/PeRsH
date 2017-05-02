@@ -145,6 +145,7 @@ namespace TrabFinal___PeRsH.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            Session["data"] = (DateTime.Now.Year);
             return View();
         }
 
@@ -160,32 +161,28 @@ namespace TrabFinal___PeRsH.Controllers
             int dia = Convert.ToInt16(diaSel);
 
             bool bissexto = false;
-            if (ano % 4 == 0)
+            if (DateTime.IsLeapYear(ano))
             {
-                if(ano % 100 == 0)
-                {
-                    if (ano % 400 == 0)
-                    {
-                        bissexto = true;
-                    }
-                }
+                bissexto = true;
             }
             if (bissexto==true)
             {
-                if (mes.Equals("Fevereiro")){
+                if (mes.Equals("Fevereiro"))
+                {
                     if (dia > 29)
                     {
-                        ViewBag.erro = "Erro! Insira uma data válida!";
+                        ModelState.AddModelError("", string.Format("Insira uma data válida!"));
                         return View(model);
                     }
                 }
-            }else
+            }
+            else
             {
                 if (mes.Equals("Fevereiro"))
                 {
                     if (dia > 28)
                     {
-                        ViewBag.erro = "Erro! Insira uma data válida!";
+                        ModelState.AddModelError("", string.Format("Insira uma data válida!"));
                         return View(model);
                     }
                 }
@@ -194,7 +191,7 @@ namespace TrabFinal___PeRsH.Controllers
             {
                 if (dia > 30)
                 {
-                    ViewBag.erro = "Erro! Insira uma data válida!";
+                    ModelState.AddModelError("", string.Format("Insira uma data válida!"));
                     return View(model);
                 }
             }

@@ -3,6 +3,7 @@
     ViewBag.Title = "Register";
     string[] meses = new string[12] { "Janeiro", "Fevereiro","Março","Abril","Maio","Junho","Julho",
         "Agosto","Setembro","Outubro","Novembro","Dezembro" };
+    int ano = Convert.ToInt32(Session["data"]);
 }
 
 <h2>@ViewBag.Title.</h2>
@@ -12,14 +13,6 @@
     @Html.AntiForgeryToken()
     <h4>Create a new account.</h4>
     <hr />
-    if (ViewBag.erro == null)
-    {
-
-    }
-    else
-    {
-    <div class="text-danger validation-summary-errors" data-valmsg-summary="true"><ul><li>@ViewBag.erro</li></ul></div>
-    }
     @Html.ValidationSummary("", new { @class = "text-danger" })
     <div class="form-group">
         @Html.LabelFor(m => m.Nickname, new { @class = "col-md-2 control-label" })
@@ -43,7 +36,7 @@
                 }
             </select>
             Ano: <select name="anoSel" class="btn btn-primary dropdown-toggle" style="background-color:white;color:black;border:1px solid #bbbbbb">
-                @for (int i = 1900; i <= 2100; i++)
+                @for (int i = 1900; i <= ano; i++)
                 {
                     <option id="@i" value="@i">@i</option>
                 }
