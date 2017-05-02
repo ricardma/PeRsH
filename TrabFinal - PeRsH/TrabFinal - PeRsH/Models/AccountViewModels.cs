@@ -69,6 +69,7 @@ namespace TrabFinal___PeRsH.Models
         //CAMPOS ESPECÍFICOS DO UTILIZADOR
         [Required]
         [Display(Name = "Nickname")]
+        [RegularExpression("[A-Z][A-z][0-9]",ErrorMessage = "Introduza um Nickname válido. Só são possiveis introduzir carateres alfanuméricos!")]
         public string Nickname { get; set; }
 
         [Required]
