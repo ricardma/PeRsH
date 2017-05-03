@@ -98,7 +98,7 @@ namespace TrabFinal___PeRsH.Controllers
             }
             return RedirectToAction("ManageLogins", new { Message = message });
         }
-
+        /*
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
@@ -212,7 +212,7 @@ namespace TrabFinal___PeRsH.Controllers
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
-
+        */
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
@@ -243,7 +243,7 @@ namespace TrabFinal___PeRsH.Controllers
             AddErrors(result);
             return View(model);
         }
-
+        /*
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
@@ -320,7 +320,7 @@ namespace TrabFinal___PeRsH.Controllers
             }
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
-        }
+        }*/
 
         protected override void Dispose(bool disposing)
         {

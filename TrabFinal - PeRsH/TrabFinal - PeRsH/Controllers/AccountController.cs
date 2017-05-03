@@ -69,8 +69,9 @@ namespace TrabFinal___PeRsH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            //procurar o login na base de dados
+            //procurar o 'Nickname' na base de dados
             string nick = (from utilizador in db.Users where (utilizador.Email == model.Email)  select utilizador.Nickname).First();
+            //cria uma variável de sessão com o 'Nickname' do utilizador
             Session["user"] = nick;
 
             if (!ModelState.IsValid)
@@ -99,6 +100,7 @@ namespace TrabFinal___PeRsH.Controllers
 
         //
         // GET: /Account/VerifyCode
+        /*
         [AllowAnonymous]
         public async Task<ActionResult> VerifyCode(string provider, string returnUrl, bool rememberMe)
         {
@@ -140,7 +142,7 @@ namespace TrabFinal___PeRsH.Controllers
             }
         }
 
-        //
+        //*/
         // GET: /Account/Register
         [AllowAnonymous]
         public ActionResult Register()
@@ -161,16 +163,23 @@ namespace TrabFinal___PeRsH.Controllers
             int dia = Convert.ToInt16(diaSel);
 
             bool bissexto = false;
+
+            //se o ano for bissexto...
             if (DateTime.IsLeapYear(ano))
             {
+                //atribui à variavel 'bissexto' o valor de TRUE
                 bissexto = true;
             }
+            //caso a variavel 'bissexto' tenha o valor de TRUE...
             if (bissexto==true)
             {
+                //se o 'mes' for igual a FEVEREIRO...
                 if (mes.Equals("Fevereiro"))
                 {
+                    //caso o 'doa' seja maior que 29
                     if (dia > 29)
                     {
+                        //cria uma mensagem de erro para o utilizador
                         ModelState.AddModelError("", string.Format("Insira uma data válida!"));
                         return View(model);
                     }
@@ -178,19 +187,25 @@ namespace TrabFinal___PeRsH.Controllers
             }
             else
             {
+                //caso o 'mes' seja FEVEREIRO
                 if (mes.Equals("Fevereiro"))
                 {
+                    //caso o 'dia' seja maior que 28
                     if (dia > 28)
                     {
+                        //cria uma mensagem de erro para o utilizador
                         ModelState.AddModelError("", string.Format("Insira uma data válida!"));
                         return View(model);
                     }
                 }
             }
+            //caso o 'mes' seja ABRIL, JUNHO, SETEMBRO OU NOVEMBRO...
             if(mes.Equals("Abril") || mes.Equals("Junho") || mes.Equals("Setembro") || mes.Equals("Novembro"))
             {
+                //caso o 'dia' seja maior que 30
                 if (dia > 30)
                 {
+                    //cria uma mensagem de erro para o utilizador
                     ModelState.AddModelError("", string.Format("Insira uma data válida!"));
                     return View(model);
                 }
@@ -222,6 +237,7 @@ namespace TrabFinal___PeRsH.Controllers
             return View(model);
         }
 
+        /*
         //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
@@ -234,7 +250,7 @@ namespace TrabFinal___PeRsH.Controllers
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             return View(result.Succeeded ? "ConfirmEmail" : "Error");
         }
-
+        
         //
         // GET: /Account/ForgotPassword
         [AllowAnonymous]
@@ -278,7 +294,7 @@ namespace TrabFinal___PeRsH.Controllers
         {
             return View();
         }
-
+        
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
@@ -286,7 +302,6 @@ namespace TrabFinal___PeRsH.Controllers
         {
             return code == null ? View("Error") : View();
         }
-
         //
         // POST: /Account/ResetPassword
         [HttpPost]
@@ -331,7 +346,6 @@ namespace TrabFinal___PeRsH.Controllers
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }));
         }
-
         //
         // GET: /Account/SendCode
         [AllowAnonymous]
@@ -435,7 +449,7 @@ namespace TrabFinal___PeRsH.Controllers
             return View(model);
         }
 
-        //
+        //*/
         // POST: /Account/LogOff
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -444,7 +458,7 @@ namespace TrabFinal___PeRsH.Controllers
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             return RedirectToAction("Index", "Home");
         }
-
+        /*
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
@@ -452,7 +466,7 @@ namespace TrabFinal___PeRsH.Controllers
         {
             return View();
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing)
