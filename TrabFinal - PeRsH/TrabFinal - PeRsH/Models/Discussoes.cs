@@ -13,7 +13,7 @@ namespace TrabFinal___PeRsH.Models
         public Discussoes()
         {
             //Carregar a lista de COMENTARIOS
-            ListaComentarios = new HashSet<Comentarios>();
+            TemasDiscussoes = new HashSet<Temas>();
         }
 
         [Key]
@@ -42,7 +42,7 @@ namespace TrabFinal___PeRsH.Models
         public int report { get; set; }
 
         //especificar que uma DISCUSSAO tem vários COMENTARIOS
-        public ICollection<Comentarios> ListaComentarios { get; set; }
+        public ICollection<Temas> TemasDiscussoes { get; set; }
 
         //********************************
         //*CRIACAO DAS CHAVES FORASTEIRAS*
@@ -51,7 +51,7 @@ namespace TrabFinal___PeRsH.Models
         //cria o atributo que irá funcionar como FK na BD
         //e relaciona-o com o atributo a seguir
         [ForeignKey("User")]
-        [Display(Name = "User")]
+        [Display(Name = "Utilizador")]
         public string UtilizadorFK { get; set; }
         //Relaciona o objeto DISCUSSOES com um USER
         public virtual ApplicationUser User { get; set; }
