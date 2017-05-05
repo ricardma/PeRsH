@@ -13,7 +13,7 @@ namespace TrabFinal___PeRsH.Models
         public Temas()
         {
            //Carregar a lista de Discussões
-           ListaDiscussoes = new HashSet<Discussoes>();
+           TemasDiscussoes = new HashSet<Discussoes>();
         }
         
         [Key]
@@ -24,6 +24,6 @@ namespace TrabFinal___PeRsH.Models
         public string Etiqueta { get; set; }
 
         //especificar que um TEMA tem várias DISCUSSOES
-        public ICollection<Discussoes> ListaDiscussoes { get; set; }
+        public ICollection<Discussoes> TemasDiscussoes { get; set; }
     }
 }
