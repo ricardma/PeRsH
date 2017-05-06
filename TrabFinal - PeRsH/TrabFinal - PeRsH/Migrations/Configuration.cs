@@ -20,7 +20,7 @@ namespace TrabFinal___PeRsH.Migrations
             AutomaticMigrationsEnabled = true;
         }
 
-
+        
         protected override void Seed(TrabFinal___PeRsH.Models.ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
@@ -97,6 +97,6 @@ namespace TrabFinal___PeRsH.Migrations
             };
             comentarios.ForEach(cc => context.Comentarios.AddOrUpdate(c => c.comentID, cc));
             context.SaveChanges();
-        }
+       }
     }
 }
