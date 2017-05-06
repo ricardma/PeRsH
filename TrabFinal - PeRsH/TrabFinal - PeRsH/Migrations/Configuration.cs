@@ -41,8 +41,10 @@ namespace TrabFinal___PeRsH.Migrations
 
             var users = new List<ApplicationUser>
             {
-                new ApplicationUser { UserName = "teste@teste.com", Nickname = "teste", PasswordHash = password, Email = "teste@teste.com"},
-                new ApplicationUser { UserName = "teste1@teste1.com", Nickname = "teste1", PasswordHash = password, Email = "teste1@teste1.com"}
+                new ApplicationUser { UserName = "teste@teste.com", Nickname = "teste", PasswordHash = password, Email = "teste@teste.com",
+                    EmailConfirmed = false, SecurityStamp = Guid.NewGuid().ToString()},
+                new ApplicationUser { UserName = "teste1@teste1.com", Nickname = "teste1", PasswordHash = password, Email = "teste1@teste1.com",
+                 EmailConfirmed = false, SecurityStamp = Guid.NewGuid().ToString()}
             };
             users.ForEach(uu => context.Users.AddOrUpdate( u => u.Id, uu));
             context.SaveChanges();
