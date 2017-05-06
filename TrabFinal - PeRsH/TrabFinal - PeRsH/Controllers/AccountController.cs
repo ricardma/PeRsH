@@ -69,13 +69,35 @@ namespace TrabFinal___PeRsH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
         {
-            //procurar o 'Nickname' na base de dados
-            string nick = (from utilizador in db.Users where (utilizador.Email == model.Email)  select utilizador.Nickname).First();
-            //cria uma variável de sessão com o 'Nickname' do utilizador
-            Session["user"] = nick;
 
             if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            string mailNick = "";
+            string nick = "";
+
+            try
+            {
+                //procurar o 'Nickname' na base de dados
+                nick = (from utilizador in db.Users where (utilizador.Email == model.Email) select utilizador.Nickname).First();
+                //cria uma variável de sessão com o 'Nickname' do utilizador
+                Session["user"] = nick;
+
+                //verificar se o login corresponde ao email****
+                //variavel que vai procurar na bd o email correspondente ao nickname que está a tentar fazer login
+                mailNick = (from user in db.Users where (model.Nickname.Equals(user.Nickname)) select user.Email).FirstOrDefault();
+                //verificar se o mail não é igual ao email passado para lançar um erro
+                    if (!mailNick.Equals(model.Email))
+                    {
+                        ModelState.AddModelError("", string.Format("Email e Nickname não são correspondentes."));
+                        return View(model);
+                    }
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("", string.Format("Email e Nickname não são correspondentes."));
                 return View(model);
             }
 
