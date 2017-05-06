@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace TrabFinal___PeRsH.Models
 {
@@ -44,6 +45,15 @@ namespace TrabFinal___PeRsH.Models
         public static ApplicationDbContext Create()
         {
             return new ApplicationDbContext();
+        }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            // não podemos usar a chave seguinte, nesta geração de tabelas
+            // por causa das tabelas do Identity (gestão de utilizadores)
+            // modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            base.OnModelCreating(modelBuilder);
         }
 
         //***********************************************************************************
