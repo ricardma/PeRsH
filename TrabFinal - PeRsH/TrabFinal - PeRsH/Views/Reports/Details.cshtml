@@ -1,0 +1,42 @@
+﻿@model TrabFinal___PeRsH.Models.Reports
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Reports</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Discussoes.titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Discussoes.titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Nickname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Nickname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.razRep)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.razRep)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.RepId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

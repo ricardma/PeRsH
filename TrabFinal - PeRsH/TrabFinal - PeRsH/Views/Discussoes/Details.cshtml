@@ -1,0 +1,74 @@
+﻿@model TrabFinal___PeRsH.Models.Discussoes
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Discussoes</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.User.Nickname)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.Nickname)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dataPublicacao)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dataPublicacao)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.titulo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.titulo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.conteudo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.conteudo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.likes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.likes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.dislikes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.dislikes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.report)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.report)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.idDiscussao }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

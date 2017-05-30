@@ -1,0 +1,45 @@
+﻿@model IEnumerable<TrabFinal___PeRsH.Models.ComentReports>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Comentarios.conteudo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.Nickname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.razRep)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comentarios.conteudo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.Nickname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.razRep)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ComRepId }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ComRepId }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ComRepId })
+        </td>
+    </tr>
+}
+
+</table>

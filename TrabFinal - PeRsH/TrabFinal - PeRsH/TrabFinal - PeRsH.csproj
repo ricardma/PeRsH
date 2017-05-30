@@ -168,8 +168,14 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\ComentariosController.cs" />
+    <Compile Include="Controllers\ComentReportsController.cs" />
+    <Compile Include="Controllers\DiscussoesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\PergDiscController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\TemasController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -178,6 +184,7 @@
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\ComentReports.cs" />
     <Compile Include="Models\Discussoes.cs" />
+    <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Reports.cs" />
@@ -186,6 +193,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-TrabFinal - PeRsH-20170328021943.mdf" />
+    <Content Include="App_Data\aspnet-TrabFinal - PeRsH-20170328021943_log.ldf">
+      <DependentUpon>aspnet-TrabFinal - PeRsH-20170328021943.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="favicon.ico" />
@@ -206,7 +217,9 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -226,11 +239,34 @@
     <Content Include="Views\Manage\Index.cshtml" />
     <Content Include="Views\Shared\Lockout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\Comentarios\Create.cshtml" />
+    <Content Include="Views\Comentarios\Delete.cshtml" />
+    <Content Include="Views\Comentarios\Details.cshtml" />
+    <Content Include="Views\Comentarios\Edit.cshtml" />
+    <Content Include="Views\Comentarios\Index.cshtml" />
+    <Content Include="Views\ComentReports\Create.cshtml" />
+    <Content Include="Views\ComentReports\Delete.cshtml" />
+    <Content Include="Views\ComentReports\Details.cshtml" />
+    <Content Include="Views\ComentReports\Edit.cshtml" />
+    <Content Include="Views\ComentReports\Index.cshtml" />
+    <Content Include="Views\Discussoes\Create.cshtml" />
+    <Content Include="Views\Discussoes\Delete.cshtml" />
+    <Content Include="Views\Discussoes\Details.cshtml" />
+    <Content Include="Views\Discussoes\Edit.cshtml" />
+    <Content Include="Views\Discussoes\Index.cshtml" />
+    <Content Include="Views\Reports\Create.cshtml" />
+    <Content Include="Views\Reports\Delete.cshtml" />
+    <Content Include="Views\Reports\Details.cshtml" />
+    <Content Include="Views\Reports\Edit.cshtml" />
+    <Content Include="Views\Reports\Index.cshtml" />
+    <Content Include="Views\Temas\Create.cshtml" />
+    <Content Include="Views\Temas\Delete.cshtml" />
+    <Content Include="Views\Temas\Details.cshtml" />
+    <Content Include="Views\Temas\Edit.cshtml" />
+    <Content Include="Views\Temas\Index.cshtml" />
+    <Content Include="Views\PergDisc\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Views\User\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />

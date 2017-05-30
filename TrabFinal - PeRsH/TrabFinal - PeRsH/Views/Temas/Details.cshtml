@@ -1,0 +1,26 @@
+﻿@model TrabFinal___PeRsH.Models.Temas
+
+@{
+    ViewBag.Title = "Detalhes";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Temas</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Etiqueta)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Etiqueta)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editar", "Edit", new { id = Model.idTema }) |
+    @Html.ActionLink("Voltar aos Temas", "Index")
+</p>

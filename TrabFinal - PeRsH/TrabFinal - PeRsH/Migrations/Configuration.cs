@@ -35,7 +35,7 @@ namespace TrabFinal___PeRsH.Migrations
             //      new Person { FullName = "Rowan Miller" }
             //    );
             //
-            
+            /*
             var passHas = new PasswordHasher();
             string password = passHas.HashPassword("123Qwe.");
 
@@ -44,6 +44,8 @@ namespace TrabFinal___PeRsH.Migrations
                 new ApplicationUser { UserName = "teste@teste.com", Nickname = "teste", PasswordHash = password, Email = "teste@teste.com",
                     EmailConfirmed = false, SecurityStamp = Guid.NewGuid().ToString()},
                 new ApplicationUser { UserName = "teste1@teste1.com", Nickname = "teste1", PasswordHash = password, Email = "teste1@teste1.com",
+                 EmailConfirmed = false, SecurityStamp = Guid.NewGuid().ToString() },
+                new ApplicationUser { UserName = "utilizador1@utilizador1.com", Nickname = "utilizador1", PasswordHash = password, Email = "utilizador1@utilizador1.com",
                  EmailConfirmed = false, SecurityStamp = Guid.NewGuid().ToString()}
             };
             users.ForEach(uu => context.Users.AddOrUpdate( u => u.Id, uu));
@@ -60,6 +62,7 @@ namespace TrabFinal___PeRsH.Migrations
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(context));
             userManager.AddToRole(users[0].Id , roles[0].Name);
             userManager.AddToRole(users[1].Id, roles[0].Name);
+            userManager.AddToRole(users[2].Id, roles[1].Name);
 
             var tema = new List<Temas>
             {
@@ -99,6 +102,7 @@ namespace TrabFinal___PeRsH.Migrations
             };
             comentarios.ForEach(cc => context.Comentarios.AddOrUpdate(c => c.comentID, cc));
             context.SaveChanges();
+            */
        }
     }
 }

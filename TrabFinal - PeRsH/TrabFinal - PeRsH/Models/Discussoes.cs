@@ -12,7 +12,6 @@ namespace TrabFinal___PeRsH.Models
     {
         public Discussoes()
         {
-            //Carregar a lista de COMENTARIOS
             TemasDiscussoes = new HashSet<Temas>();
         }
 

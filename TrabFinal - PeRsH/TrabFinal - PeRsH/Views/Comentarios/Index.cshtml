@@ -1,0 +1,69 @@
+﻿@model IEnumerable<TrabFinal___PeRsH.Models.Comentarios>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Discussoes.titulo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.Nickname)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.conteudo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dataComentario)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.likes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.dislikes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.report)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Discussoes.titulo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.Nickname)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.conteudo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dataComentario)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.likes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.dislikes)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.report)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.comentID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.comentID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.comentID })
+        </td>
+    </tr>
+}
+
+</table>

@@ -91,13 +91,13 @@ namespace TrabFinal___PeRsH.Controllers
                 //verificar se o mail não é igual ao email passado para lançar um erro
                     if (!mailNick.Equals(model.Email))
                     {
-                        ModelState.AddModelError("", string.Format("Email e Nickname não são correspondentes."));
+                        ModelState.AddModelError("", string.Format("Introduza as credenciais corretas."));
                         return View(model);
                     }
             }
             catch (Exception)
             {
-                ModelState.AddModelError("", string.Format("Email e Nickname não são correspondentes."));
+                ModelState.AddModelError("", string.Format("Introduza as credenciais corretas."));
                 return View(model);
             }
 
@@ -107,8 +107,8 @@ namespace TrabFinal___PeRsH.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("Index", "Index", null);
+                    //return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
