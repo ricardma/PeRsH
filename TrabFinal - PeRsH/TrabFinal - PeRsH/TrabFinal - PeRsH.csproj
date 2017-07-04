@@ -181,11 +181,14 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\Avaliacao.cs" />
     <Compile Include="Models\Comentarios.cs" />
     <Compile Include="Models\ComentReports.cs" />
     <Compile Include="Models\Discussoes.cs" />
+    <Compile Include="Models\Dislikes.cs" />
     <Compile Include="Models\HomeViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
+    <Compile Include="Models\Likes.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Reports.cs" />
     <Compile Include="Models\Temas.cs" />
@@ -203,6 +206,8 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Imagens\hoquei.jpg" />
+    <Content Include="Imagens\miniStick.png" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
@@ -264,7 +269,10 @@
     <Content Include="Views\Temas\Details.cshtml" />
     <Content Include="Views\Temas\Edit.cshtml" />
     <Content Include="Views\Temas\Index.cshtml" />
+    <Content Include="Views\PergDisc\PergDisc.cshtml" />
     <Content Include="Views\PergDisc\Index.cshtml" />
+    <Content Include="Views\PergDisc\PesqPerg.cshtml" />
+    <Content Include="Views\Manage\Perfil.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -9,6 +9,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TrabFinal___PeRsH.Models;
+using System.Collections.Generic;
 
 namespace TrabFinal___PeRsH.Controllers
 {
@@ -107,7 +108,7 @@ namespace TrabFinal___PeRsH.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToAction("Index", "Index", null);
+                    return RedirectToAction("Index", "Home", null);
                     //return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -170,6 +171,10 @@ namespace TrabFinal___PeRsH.Controllers
         public ActionResult Register()
         {
             Session["data"] = (DateTime.Now.Year);
+            List<string> lista = db.Users.Select(x=>x.Nickname).ToList();
+            List<string> listaEmails = db.Users.Select(x => x.Email).ToList();
+            ViewData["lista"] = lista;
+            ViewData["listaEmails"] = listaEmails;
             return View();
         }
 
@@ -232,29 +237,39 @@ namespace TrabFinal___PeRsH.Controllers
                     return View(model);
                 }
             }
-            if (ModelState.IsValid)
+
+            var nick = db.Users.Select(x => x).Where(x => x.Nickname == model.Nickname);
+            if (!nick.Any())
             {
-                var user = new ApplicationUser {
-                    Nickname = model.Nickname,
-                    dataNasc = DateTime.Parse(dia + "-" + mes + "-" + ano),
-                    UserName = model.Email,
-                    Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                if (ModelState.IsValid)
                 {
-                     //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    await UserManager.AddToRoleAsync(user.Id, "Utilizador");
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    var user = new ApplicationUser
+                    {
+                        Nickname = model.Nickname,
+                        dataNasc = DateTime.Parse(dia + "-" + mes + "-" + ano),
+                        UserName = model.Email,
+                        Email = model.Email
+                    };
+                    var result = await UserManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+                        await UserManager.AddToRoleAsync(user.Id, "Utilizador");
+                        // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
+                        // Send an email with this link
+                        // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                        // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                        // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
 
-                    return RedirectToAction("Index", "Home");
+                        return RedirectToAction("Index", "Home");
+                    }
+                    AddErrors(result);
                 }
-                AddErrors(result);
             }
-
+            else
+            {
+                ModelState.AddModelError("", string.Format("Este Nickname já existe."));
+            }
             // If we got this far, something failed, redisplay form
             return View(model);
         }

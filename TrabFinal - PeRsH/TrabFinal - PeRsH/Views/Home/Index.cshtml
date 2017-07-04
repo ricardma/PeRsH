@@ -2,17 +2,20 @@
     ViewBag.Title = "Home Page";
 }
 
-<div class="jumbotron">
-    <p style="text-align:center;color:#428bca;font-family:Arial;font-size:30px;">Perguntas e Respostas sobre Hóquei - PeRsH</p>
-    <p><p class="glyphicon glyphicon-arrow-right"></p> Visualiza os vários temas que existem com várias perguntas e curiosidades sobre o hóquei em patins.</p>
-    <p><p class="glyphicon glyphicon-arrow-right"></p> Cria várias perguntas ou responde às questões dos outros utilizadores.</p>
-    <p><p class="glyphicon glyphicon-arrow-right"></p> Avalia as várias perguntas ou respostas.</p>
-    <p><p class="glyphicon glyphicon-arrow-right"></p> Reporta as perguntas ou repostas que não sejam de caracter informativo.</p>
+<script>
+    document.body.style.backgroundColor ="#f5f5f5";
+</script>
+<div class="jumbotron" style="margin-left:18.5%;width:63%;height:80%;background-image:url(../../Imagens/hoquei.jpg)">
+    <p style="text-align:center;color:#428bca;font-family:Arial;font-size:xx-large;">Perguntas e Respostas sobre Hóquei - <mark style="background-color:#428bca;color:white">PeRsH</mark></p>
+    <p style="font-size:large"><img width="30" src="~/Imagens/miniStick.png" /> Visualiza os vários temas que existem com várias perguntas e curiosidades sobre o hóquei em patins.</p>
+    <p style="font-size:large"><img width="30" src="~/Imagens/miniStick.png" /> Cria várias perguntas ou responde às questões dos outros utilizadores.</>
+    <p style="font-size:large"><img width="30" src="~/Imagens/miniStick.png" /> Avalia as várias perguntas ou respostas.</p>
+    <p style="font-size:large"><img width="30" src="~/Imagens/miniStick.png" /> Reporta as perguntas ou repostas que não sejam de caracter informativo.</p>
     <br />
-    <button class="btn btn-primary btn-lg"style="margin-left:30%">Visitar-nos <p class="glyphicon glyphicon-play"></p></button>
-    <button class="btn btn-primary btn-lg" style="margin-left:5%">Registar <p class="glyphicon glyphicon-hand-up"></p></button>
+    @Html.ActionLink("Ver Temas","Index","Temas",routeValues:null, htmlAttributes: new { @class= "btn btn-primary btn-lg", @style= "margin-left:30%;width:20%"})
+    @Html.ActionLink("Registar", "Register", "Account", routeValues: null, htmlAttributes: new { @class = "btn btn-primary btn-lg", @style = "margin-left:5%;width:20%"})
 </div>
 <br />
-<footer>
+<footer class="navbar-fixed-bottom">
     <p style="color:#428bca;font-family:Arial;font-size:20px;">&copy; @DateTime.Now.Year - PeRsH</p>
 </footer>

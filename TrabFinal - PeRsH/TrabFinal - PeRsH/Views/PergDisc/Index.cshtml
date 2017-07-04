@@ -2,38 +2,45 @@
 @{
     ViewBag.Title = "Index";
     int temaEsc = ViewBag.temaEsc;
-    string temaEscolhido = ViewBag.temaEscolhido;
+    var temaEscolhido = ViewBag.temaEscolhido;
 }
-<div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#a1c5e5;height:92%;width:20%">
-        
-        <ul style="font-size:x-large;color:#428bca;margin-top:5%">
-            Lista de Temas:
-            @foreach (var item in Model.temas)
+
+
+<div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#e0e0e0;height:92%;width:20%">
+    <div class="well" style="background-color:#e0e0e0;border:none">
+        <br />
+        <p style="text-align:center;color:#333333;font-size:2.5vmin"><b>Estatísticas do Site</b></p>
+        <p style="color:#06569c">Número de Temas: <span class="badge">@Model.temas.Count()</span></p>
+        <p style="color:#06569c">Número de Discussões: <span class="badge">@ViewBag.numDisc</span></p>
+        <p style="color:#06569c">Número de Comentários: <span class="badge">@Model.comentarios.Count()</span></p>
+        <p style="color:#06569c">Número de Likes: <span class="badge">@Model.likes.Count()</span></p>
+        <p style="color:#06569c">Número de Dislikes: <span class="badge">@Model.dislikes.Count()</span></p>
+    </div>
+    <div class="well" style="background-color:#e0e0e0;border:none;text-align:center">
+        <label>Pesquisa:</label>
+        @using (Html.BeginForm("Pesquisa", "PergDisc"))
             {
-            if (temaEsc != item.idTema)
-            {
-                    <li>@Html.ActionLink(item.Etiqueta, "Index", "PergDisc", new { id = item.idTema }, new { @style = "color:white;font-size:medium" })</li>
-                }
-                else
-                {
-                    <li>@Html.ActionLink(item.Etiqueta, "Index", "PergDisc", new { id = item.idTema }, new { @style = "color:white;font-size:medium" })<p class="glyphicon glyphicon-eye-open"></p></li>
-                }
-            }
-        </ul>
+            <textarea name="btnPesq" placeholder="Insira a sua pergunta" rows="6" maxlength="120"></textarea>
+            <button class="btn btn-default" style="border:1px solid #a9a9a9"><p class="glyphicon glyphicon-search"></p></button>
+        }
+    </div>
 </div>
-<h1 style="margin-left:40%;color:#707070">@temaEscolhido</h1>
-<div style="margin-left:25%;margin-top:3%;width:70%;">
+
+
+
+<div class="container" style="width:70%;margin-left:25%;">
+    <h1 style="color:#06569c">@temaEscolhido</h1>
     @foreach (var item in Model.discussoes)
     {
-        <div style="margin-top:3%;height:90%;background-color:#f6f6f6">
-            <h1 style="background-color:#808080;color:white">@item.titulo</h1>
-            @item.conteudo
-            @using (Html.BeginForm())
-            {
-                <button class="btn btn-primary" value="Likes" style="background-color:#aaaaaa;left:80%;width:5%;font-size:15px;height:5%;border:1px solid #aaaaaa">@item.likes <p class="glyphicon glyphicon-thumbs-up"></p></button>
-                <button class="btn btn-primary" value="Likes" style="background-color:#aaaaaa;left:78.5%;width:5%;font-size:15px;height:5%;border:1px solid #aaaaaa">@item.dislikes <p class="glyphicon glyphicon-thumbs-down"></p></button>
-            }
-            <button class="btn btn-primary" style="text-align:center;width:70%;background-color:#aaaaaa;border:1px solid #aaaaaa;">Comentários</button>
+        <div style="border:1px solid #06569c;background-color:white;margin-top:2%">
+            <p style="font-size:25px;background-color:#a1c5e5;">@item.titulo</p>
+            @Html.ActionLink(""+ @item.conteudo.Substring(0, 120)+"...","PergDisc","PergDisc", new { id = item.idDiscussao }, new { })
+            <span style="margin-left:1.5%"><b class="glyphicon glyphicon-comment"></b> @Model.comentarios.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
+            <span style="margin-left:0.5%"><b class="glyphicon glyphicon-thumbs-up text-right"></b> @Model.likes.Select(x=>x).Where(x=>x.DiscussaoFK==item.idDiscussao).Count()</span>
+            <span style="margin-left:0.5%"><b class="glyphicon glyphicon-thumbs-down text-right"></b> @Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
+            <span style="margin-left:0.5%"><b class="glyphicon glyphicon-star"></b> @item.avaliacao</span>
         </div>
     }
 </div>
+
+

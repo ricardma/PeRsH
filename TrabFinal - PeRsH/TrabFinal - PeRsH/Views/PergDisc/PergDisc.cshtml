@@ -1,0 +1,426 @@
+﻿@using Microsoft.AspNet.Identity
+@model TrabFinal___PeRsH.Models.HomeViewModel
+@{
+    ViewBag.title = "Discussões";
+    int temaEsc = ViewBag.temaEsc;
+    string temaEscolhido = ViewBag.temaEscolhido;
+    var stateVoteDisc = (bool)Session["stateVoteDisc"];
+    var stateVoteDiscDislike = (bool)Session["stateVoteDiscDislike"];
+}
+<div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#e0e0e0;height:92%;width:20.25%">
+    <div class="well" style="background-color:#e0e0e0;border:none">
+        <br />
+        <p style="text-align:center;color:#333333;font-size:2.5vmin"><b>Estatísticas do Site</b></p>
+        <p style="color:#06569c">Número de Temas: <span class="badge">@Model.temas.Count()</span></p>
+        <p style="color:#06569c">Número de Discussões: <span class="badge">@ViewBag.numDisc</span></p>
+        <p style="color:#06569c">Número de Comentários: <span class="badge">@Model.comentarios.Count()</span></p>
+        <p style="color:#06569c">Número de Likes: <span class="badge">@Model.likes.Count()</span></p>
+        <p style="color:#06569c">Número de Dislikes: <span class="badge">@Model.dislikes.Count()</span></p>
+    </div>
+    <div class="well" style="background-color:#e0e0e0;border:none;text-align:center">
+        <label>Pesquisa:</label>
+        @using (Html.BeginForm("Pesquisa", "PergDisc"))
+            {
+            <textarea name="btnPesq" placeholder="Insira a sua pergunta" rows="6" maxlength="120"></textarea>
+            <button class="btn btn-default" style="border:1px solid #a9a9a9"><p class="glyphicon glyphicon-search"></p></button>
+        }
+    </div>
+</div>
+
+<div class="container" style="width:70%;margin-left:25%">
+    <h1 style="color:#06569c">@temaEscolhido</h1>
+    <div style="background-color:white">
+        @foreach (var item in Model.discussoes)
+        {
+            <div style="margin-top:1%;height:90%">
+                <h1 style="background-color:#06569c;color:white">@item.titulo</h1>
+                <div class="container row">
+                    <div class="col-lg-6">
+                        <span style="margin-top:1%">
+                            <label class="label-info">Autor:</label>@Html.ActionLink(" " + item.User.Nickname, "Perfil", "Manage", new { nick = item.User.Nickname }, new { })
+                        </span><br />
+                        <span><label class="label-info">Avaliação:</label> @item.avaliacao</span>
+                    </div>
+                    <div class="col-lg-6" style="text-align:right">
+                        <span><label class="label-info">Data da Publicação:</label> @item.dataPublicacao.Day/@item.dataPublicacao.Month/@item.dataPublicacao.Year</span>
+                    </div>
+                </div>
+                <div class=" container row">
+                    <div class="col-lg-12">
+                        @item.conteudo
+                    </div>
+                </div>
+                <div class="btn-group btn-group-justified" style="text-align:right;margin-top:1%;">
+                    @{
+                        var numLikesDiscs = Model.likes.Select(x => x).Count();
+                        var numDislikesDiscs = Model.dislikes.Select(x => x).Count();
+                        var utiValDisc = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentarioFK == null).ToList();
+                        bool stateEvaluation;
+                    }
+                    @if (utiValDisc.Any())
+                    {
+                        stateEvaluation = true;
+                    }
+                    else
+                    {
+                        stateEvaluation = false;
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                {
+                    if (stateEvaluation == false)
+                    {
+                        using (Html.BeginForm("avaliaDisc", "PergDisc", new { id = item.idDiscussao }))
+                        {
+                                <div>
+                                    Avaliação:
+                                    <button name="btnAvalDisc" value="avalDisc1" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="star1" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    </button>
+                                    <button name="btnAvalDisc" value="avalDisc2" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="star2" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    </button>
+                                    <button name="btnAvalDisc" value="avalDisc3" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="star3" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    </button>
+                                    <button name="btnAvalDisc" value="avalDisc4" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="star4" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    </button>
+                                    <button name="btnAvalDisc" value="avalDisc5" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    </button>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            var rate = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x=>x.DiscussaoFK==item.idDiscussao).FirstOrDefault().avaliacao;
+                            <span>Minha avaliação: 
+                            @for (var k = 1; k <= 5; k++)
+                            {
+                                if (k <= rate)
+                                {
+                                <span class="glyphicon glyphicon-star" style="color:#ff8100;border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                }
+                                else
+                                {
+                                    <span class="glyphicon glyphicon-star-empty" style="border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                }
+                            }
+                        </span>
+                        }
+                        using (Html.BeginForm(stateVoteDisc == true ? (stateVoteDiscDislike == true ? "" : "RetVote") : (stateVoteDiscDislike == true ? "RetVote" : "Vote"), "PergDisc", new { id = item.idDiscussao }))
+                        {
+                            if (stateVoteDisc == true)
+                            {
+                                if (stateVoteDiscDislike == true)
+                                {
+                                }
+                                else
+                                {
+                                    <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                }
+
+                            }
+                            else
+                            {
+                                if (stateVoteDiscDislike == true)
+                                {
+                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                    <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                }
+                                else
+                                {
+                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
+                        <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
+                    }
+                </div>
+            </div>
+                        }
+    </div>
+    <div style="background-color:white;margin-top:0%">
+        <div style="background-color:#06569c;">
+            <span style="font-size:36px;color:white">Comentários</span>
+        </div>
+        @{ var i = 1;}
+        @foreach (var item in Model.comentarios.OrderByDescending(x => x.dataComentario).ToList())
+        {
+            var numLikes = Model.likes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).ToList().Count();
+            var numDislikes = Model.dislikes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).ToList().Count();
+            var stateOfLike = Model.likes.Select(x => x).Where(x => x.UtilizadorFK == item.UtilizadorFK).ToList();
+            var stateOfDislike = Model.dislikes.Select(x => x).Where(x => x.UtilizadorFK == item.UtilizadorFK).ToList();
+            var utiAvalComent = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentarioFK == item.comentID).ToList();
+            bool stateEvaluationComent;
+            if (utiAvalComent.Any())
+            {
+                stateEvaluationComent = true;
+            }
+            else
+            {
+                stateEvaluationComent = false;
+            }
+            <div style="margin-top:1%;">
+                <div class="container row" style="margin-left:0%">
+                    <div class="col-lg-6" style="padding-left:0%">
+                        <span style="margin-top:1%">
+                            <label class="label-info">Autor:</label>@Html.ActionLink(" " + item.User.Nickname, "Perfil", "Manage", new { nick = item.User.Nickname }, new { })
+                        </span><br />
+                        <span><label class="label-info">Avaliação:</label> @item.avaliacao</span>
+                    </div>
+                    <div class="col-lg-6" style="text-align:right">
+                        <span><label class="label-info">Data da Publicação:</label> @item.dataComentario.Day/@item.dataComentario.Month/@item.dataComentario.Year</span>
+                    </div>
+                </div>
+                <div class=" container row">
+                    <div class="col-lg-12">
+                        @item.conteudo
+                    </div>
+                </div>
+                <div class="btn-group btn-group-justified" style="text-align:right;margin-top:1%;">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        if (stateEvaluationComent == false)
+                        {
+                            using (Html.BeginForm("avaliaComent", "PergDisc", new { idComent = item.comentID, idDisc = item.DiscussaoFK }))
+                            {
+                                <div>
+                                    Avaliação:
+                                    <button name="btnAvalComent" value="avalComent1" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="@i" onmouseover="marcaComent(this.id)" onmouseout="desmarcaComent(this.id)"></span>
+                                    </button>
+                                    @{i++;
+                                    }
+                                    <button name="btnAvalComent" value="avalComent2" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="@i" onmouseover="marcaComent(this.id)" onmouseout="desmarcaComent(this.id)"></span>
+                                    </button>
+                                    @{i++;
+                                    }
+                                    <button name="btnAvalComent" value="avalComent3" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="@i" onmouseover="marcaComent(this.id)" onmouseout="desmarcaComent(this.id)"></span>
+                                    </button>
+                                    @{i++;
+                                    }
+                                    <button name="btnAvalComent" value="avalComent4" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="@i" onmouseover="marcaComent(this.id)" onmouseout="desmarcaComent(this.id)"></span>
+                                    </button>
+                                    @{i++;
+                                    }
+                                    <button name="btnAvalComent" value="avalComent5" type="submit" style="background-color:white;border:none">
+                                        <span class="glyphicon glyphicon-star-empty" id="@i" onmouseover="marcaComent(this.id)" onmouseout="desmarcaComent(this.id)"></span>
+                                    </button>
+                                    @{i++;
+                                    }
+                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            var rate = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x=>x.ComentarioFK==item.comentID).FirstOrDefault().avaliacao;
+                                            <span>
+                                                Minha avaliação:
+                                                @for (var k = 1; k <= 5; k++)
+                                                {
+                                                    if (k <= rate)
+                                                    {
+                                                        <span class="glyphicon glyphicon-star" style="color:#ff8100;border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="glyphicon glyphicon-star-empty" style="border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                                    }
+                                                }
+                                            </span>
+                                        }
+                                        using (Html.BeginForm(stateVoteDisc == true ? (stateVoteDiscDislike == true ? "" : "RetVote") : (stateVoteDiscDislike == true ? "RetVote" : "Vote"), "PergDisc", new { id = item.comentID }))
+                                        {
+                                            if (stateOfLike.Any())
+                                            {
+                                                if (stateOfDislike.Any())
+                                                {
+                                                }
+                                                else
+                                                {
+                                                    <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if (stateOfDislike.Any())
+                                                {
+                                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                                    <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                                }
+                                                else
+                                                {
+                                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                            <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                        }
+                </div>
+            </div>
+            <hr style="border:1px solid #808080;margin-top:0%" />
+                                        }
+    </div>
+</div>
+
+
+
+<script>
+    var butValue;
+    function mudaThis(id) {
+        but = document.getElementById(id);
+        butValue = but.childNodes[0].nodeValue;
+        var codBut = id.substring(3, id.length);
+        but.childNodes[0].nodeValue = "Retirar " + codBut;
+    }
+
+    function voltaThis(id) {
+        but = document.getElementById(id);
+        but.childNodes[0].nodeValue = butValue;
+    }
+
+    function marca(id) {
+        var st = document.getElementById(id);
+        var i = id.substring(4, 5);
+        if (i > 1) {
+            for (var k = 1; k <= i; k++) {
+                var star = document.getElementById("star" + k);
+                star.removeAttribute("class");
+                star.setAttribute("class", "glyphicon glyphicon-star");
+                star.style.color = "#ff8100";
+            }
+        } else {
+            st.removeAttribute("class");
+            st.setAttribute("class", "glyphicon glyphicon-star");
+            st.style.color = "#ff8100";
+        }
+    }
+
+    function desmarca(id) {
+        var st = document.getElementById(id);
+        var i = id.substring(4, 5);
+        if (i > 1) {
+            for (var k = 1; k <= i; k++) {
+                var star = document.getElementById("star" + k);
+                star.removeAttribute("class");
+                star.removeAttribute("style");
+                star.setAttribute("class", "glyphicon glyphicon-star-empty");
+            }
+        } else {
+            st.removeAttribute("class");
+            st.removeAttribute("style");
+            st.setAttribute("class", "glyphicon glyphicon-star-empty");
+        }
+    }
+
+    function marcaComent(id) {
+        var st = document.getElementById(id);
+        var i = parseInt(id);
+        if (i % 5 > 1 || i % 5 == 0) {
+            if (i % 5 == 2) {
+                var idInicial = i - 1;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.setAttribute("class", "glyphicon glyphicon-star");
+                    star.style.color = "#ff8100";
+                }
+            }
+            if (i % 5 == 3) {
+                var idInicial = i - 2;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.setAttribute("class", "glyphicon glyphicon-star");
+                    star.style.color = "#ff8100";
+                }
+            }
+            if (i % 5 == 4) {
+                var idInicial = i - 3;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.setAttribute("class", "glyphicon glyphicon-star");
+                    star.style.color = "#ff8100";
+                }
+            }
+            if (i % 5 == 0) {
+                var idInicial = i - 4;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.setAttribute("class", "glyphicon glyphicon-star");
+                    star.style.color = "#ff8100";
+                }
+            }
+        } else {
+            st.removeAttribute("class");
+            st.setAttribute("class", "glyphicon glyphicon-star");
+            st.style.color = "#ff8100";
+        }
+    }
+
+    function desmarcaComent(id) {
+        var st = document.getElementById(id);
+        var i = parseInt(id);
+        if (i % 5 > 1 || i % 5 == 0) {
+            if (i % 5 == 2) {
+                var idInicial = i - 1;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.removeAttribute("style");
+                    star.setAttribute("class", "glyphicon glyphicon-star-empty");
+                }
+            }
+            if (i % 5 == 3) {
+                var idInicial = i - 2;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.removeAttribute("style");
+                    star.setAttribute("class", "glyphicon glyphicon-star-empty");
+                }
+            }
+            if (i % 5 == 4) {
+                var idInicial = i - 3;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.removeAttribute("style");
+                    star.setAttribute("class", "glyphicon glyphicon-star-empty");
+                }
+            }
+            if (i % 5 == 0) {
+                var idInicial = i - 4;
+                for (var k = idInicial; k <= i; k++) {
+                    var star = document.getElementById(k);
+                    star.removeAttribute("class");
+                    star.removeAttribute("style");
+                    star.setAttribute("class", "glyphicon glyphicon-star-empty");
+                }
+            }
+        } else {
+            st.removeAttribute("class");
+            st.removeAttribute("style");
+            st.setAttribute("class", "glyphicon glyphicon-star-empty");
+        }
+    }
+</script>

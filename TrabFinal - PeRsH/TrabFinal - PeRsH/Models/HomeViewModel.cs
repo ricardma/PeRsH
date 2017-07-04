@@ -10,5 +10,8 @@ namespace TrabFinal___PeRsH.Models
         public IEnumerable<Temas> temas;
         public IEnumerable<Discussoes> discussoes;
         public IEnumerable<Comentarios> comentarios;
+        public IEnumerable<Likes> likes;
+        public IEnumerable<Dislikes> dislikes;
+        public IEnumerable<Avaliacao> avaliacao;
     }
 }

@@ -40,6 +40,9 @@ namespace TrabFinal___PeRsH.Models
         [Display(Name = "Número de Reports")]
         public int report { get; set; }
 
+        [Display(Name = "Avaliação")]
+        public double avaliacao { get; set; }
+
         //especificar que uma DISCUSSAO tem vários COMENTARIOS
         public ICollection<Temas> TemasDiscussoes { get; set; }
 

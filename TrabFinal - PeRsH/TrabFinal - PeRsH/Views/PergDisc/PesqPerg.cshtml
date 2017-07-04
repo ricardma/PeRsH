@@ -1,0 +1,55 @@
+﻿@using System.Text.RegularExpressions
+@using TrabFinal___PeRsH.Models
+@model TrabFinal___PeRsH.Models.HomeViewModel
+@{
+    ViewBag.Title = "PesqPerg";
+    List<string> tituloEscolhido = Model.discussoes.Select(x=>x.titulo).ToList();
+    var i = 0;
+}
+
+<div class="navbar-left" style="width:20%">
+    <div class="well" style="background-color:#e0e0e0">
+        <br />
+        <p style="text-align:center;color:#333333;font-size:2.5vmin"><b>Estatísticas do Site</b></p>
+        <p style="color:#06569c">Número de Temas: <span class="badge">@Model.temas.Count()</span></p>
+        <p style="color:#06569c">Número de Discussões: <span class="badge">@ViewBag.numDisc</span></p>
+        <p style="color:#06569c">Número de Comentários: <span class="badge">@Model.comentarios.Count()</span></p>
+        <p style="color:#06569c">Número de Likes: <span class="badge">@Model.likes.Count()</span></p>
+        <p style="color:#06569c">Número de Dislikes: <span class="badge">@Model.dislikes.Count()</span></p>
+    </div>
+    <div class="well" style="background-color:#e0e0e0">
+        <label>Pesquisa:</label>
+        @using (Html.BeginForm("Pesquisa", "PergDisc"))
+            {
+            <textarea name="btnPesq" placeholder="Insira a sua pergunta" rows="6" maxlength="120"></textarea>
+            <button class="btn btn-default" style="border:1px solid #a9a9a9"><p class="glyphicon glyphicon-search"></p></button>
+        }
+    </div>
+</div>
+
+<div class="container" style="width:70%;margin-left:25%;">
+    <h1 style="color:#06569c">Resultado da Pesquisa</h1>
+        @foreach (var item in Model.discussoes)
+        {
+            <div style="border:1px solid #06569c;background-color:white;margin-top:2%">
+                <p style="font-size:25px;background-color:#a1c5e5;">@item.titulo</p>
+                 @*   @foreach (var s in ViewBag.listPesq)
+                    {
+                        if (tituloEscolhido[i].Contains(s))
+                        {
+                            <label class="label label-success">@s </label>
+                        }
+                        else
+                        {
+                            <label>@s </label>
+                        }
+                    }
+                </p>*@
+                @Html.ActionLink("" + item.conteudo.Substring(0,120) + "...", "PergDisc", "PergDisc", new { id = item.idDiscussao }, new { })
+                <span style="margin-left:2%"><b class="glyphicon glyphicon-comment"></b> @Model.comentarios.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
+                <span style="margin-left:1%"><b class="glyphicon glyphicon-thumbs-up text-right"></b> @Model.likes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
+                <span style="margin-left:1%"><b class="glyphicon glyphicon-thumbs-down text-right"></b> @Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
+             </div>
+            i++;
+        }
+</div>

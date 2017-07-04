@@ -4,6 +4,8 @@
     string[] meses = new string[12] { "Janeiro", "Fevereiro","Março","Abril","Maio","Junho","Julho",
         "Agosto","Setembro","Outubro","Novembro","Dezembro" };
     int ano = Convert.ToInt32(Session["data"]);
+    List<string> lista = ViewData["lista"] as List<string>;
+    List<string> listaEmails = ViewData["listaEmails"] as List<string>;
 }
 <h2 style="margin-left:40%">@ViewBag.Title.</h2>
 @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
@@ -16,8 +18,11 @@
             @Html.ValidationSummary("", new { @class = "text-danger" })
             <div class="form-group">
                 @Html.LabelFor(m => m.Nickname, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Nickname, new { @class = "form-control", @maxlength = 12 })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.Nickname, new { @id = "nickText", @onkeyup = "verifica(this.id)", @class = "form-control", @maxlength = 12 })
+                </div>
+                <div class="col-md-5">
+                    <span id="resultNick"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -31,13 +36,13 @@
                     </select>
                     Mês: <select name="mesSel" class="btn btn-primary dropdown-toggle" style="background-color:white;color:black;border:1px solid #bbbbbb">
                         @for (int i = 0; i < meses.Length; i++)
-                {
+                        {
                             <option id="@meses[i]" value="@meses[i]">@meses[i]</option>
                         }
                     </select>
                     Ano: <select name="anoSel" class="btn btn-primary dropdown-toggle" style="background-color:white;color:black;border:1px solid #bbbbbb">
                         @for (int i = 1900; i <= ano; i++)
-                {
+                        {
                             <option id="@i" value="@i">@i</option>
                         }
                     </select>
@@ -45,8 +50,11 @@
             </div>
             <div class="form-group">
                 @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-                <div class="col-md-10">
-                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                <div class="col-md-5">
+                    @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @id="emailText", @onkeyup="validaEmail(this.id)" })
+                </div>
+                <div class="col-md-5">
+                    <span id="textEmail"></span>
                 </div>
             </div>
             <div class="form-group">
@@ -61,6 +69,10 @@
                     @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
                 </div>
             </div>
+            <div>
+                <p><span class="glyphicon glyphicon-ok" style="color:green"></span> Livre / Formato Correto</p>
+                <p><span class="glyphicon glyphicon-remove" style="color:#ff0000"></span> Já existe / Formato Errado</p>
+            </div>
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <input type="submit" class="btn btn-default" value="Registar" />
@@ -68,8 +80,47 @@
             </div>
             </div>
         </div>
-            }
+}
 
+<script>
+    function verifica(id) {
+        var txtBox = document.getElementById(id);
+        var res = document.getElementById("resultNick");
+        var str = @Html.Raw(Json.Encode(lista));
+        if (!str.includes(txtBox.value)) {
+            if (txtBox.value=="") {
+                res.setAttribute("class", "glyphicon glyphicon-remove");
+                res.style.color = "#ff0000";
+            } else {
+                res.setAttribute("class", "glyphicon glyphicon-ok");
+                res.style.color = "green";
+            }
+            } else
+            {
+                res.setAttribute("class", "glyphicon glyphicon-remove");
+                res.style.color = "#ff0000";
+            }
+    }
+
+        function validaEmail(id) {
+        var txtBox = document.getElementById(id);
+        var res = document.getElementById("textEmail");
+        var str = @Html.Raw(Json.Encode(listaEmails));
+        if (!str.includes(txtBox.value) && txtBox.value.includes(@Html.Raw(Json.Encode("@"))) && txtBox.value.includes(".")) {
+            if (txtBox.value == "") {
+                res.setAttribute("class", "glyphicon glyphicon-remove");
+                res.style.color = "#ff0000";
+            } else {
+                res.setAttribute("class", "glyphicon glyphicon-ok");
+                res.style.color = "green";
+            }
+            } else
+            {
+                res.setAttribute("class", "glyphicon glyphicon-remove");
+                res.style.color = "#ff0000";
+            }
+    }
+</script>
             @section Scripts {
                 @Scripts.Render("~/bundles/jqueryval")
             }

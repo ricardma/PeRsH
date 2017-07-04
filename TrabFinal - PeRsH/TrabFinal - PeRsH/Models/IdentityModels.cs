@@ -64,6 +64,9 @@ namespace TrabFinal___PeRsH.Models
         public virtual DbSet<Comentarios> Comentarios { get; set; }
         public virtual DbSet<ComentReports> ComentReports { get; set; }
         public virtual DbSet<Reports> Reports { get; set; }
+        public virtual DbSet<Likes> Likes { get; set; }
+        public virtual DbSet<Dislikes> Dislikes { get; set; }
+        public virtual DbSet<Avaliacao> Avaliacao { get; set; }
     }
 
 

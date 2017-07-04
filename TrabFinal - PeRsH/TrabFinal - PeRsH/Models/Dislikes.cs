@@ -7,35 +7,19 @@ using System.Web;
 
 namespace TrabFinal___PeRsH.Models
 {
-    //Representará os dados da tabela COMENTARIOS
-    public class Comentarios
+    public class Dislikes
     {
+        //Representará os dados da tabela DISLIKES
         [Key]
-        public int comentID { get; set; }
-
-        [Required]
-        [Display(Name = "Comentário")]
-        public string conteudo { get; set; }
+        public int dislikeID { get; set; }
 
         [Column(TypeName = "date")]
-        public DateTime dataComentario { get; set; }
-
-        [Display(Name = "Gosto")]
-        public int likes { get; set; }
-
-        [Display(Name = "Não Gosto")]
-        public int dislikes { get; set; }
-
-        [Display(Name = "Número de Reports")]
-        public int report { get; set; }
-
-        [Display(Name = "Avaliação")]
-        public double avaliacao { get; set; }
+        public DateTime dataLike { get; set; }
 
         //********************************
         //*CRIACAO DAS CHAVES FORASTEIRAS*
         //********************************
-        //Relaciona o objeto COMENTARIO com uma DISCUSSAO
+        //Relaciona o objeto DISLIKES com uma DISCUSSAO
         public virtual Discussoes Discussoes { get; set; }
         //cria o atributo que irá funcionar como FK na BD
         //e relaciona-o com o atributo a seguir
@@ -48,7 +32,15 @@ namespace TrabFinal___PeRsH.Models
         [ForeignKey("User")]
         [Display(Name = "Utilizador")]
         public string UtilizadorFK { get; set; }
-        //Relaciona o objeto COMENTARIO com um USER
+        //Relaciona o objeto DISLIKES com um USER
         public virtual ApplicationUser User { get; set; }
+
+        //Relaciona o objeto DISLIKES com um COMENTARIO
+        public virtual Comentarios Comentarios { get; set; }
+        //cria o atributo que irá funcionar como FK na BD
+        //e relaciona-o com o atributo a seguir
+        [ForeignKey("Comentarios")]
+        [Display(Name = "Comentário")]
+        public int? ComentarioFK { get; set; }
     }
 }

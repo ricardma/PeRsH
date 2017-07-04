@@ -15,6 +15,7 @@ namespace TrabFinal___PeRsH.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private ApplicationDbContext db = new ApplicationDbContext();
 
         public ManageController()
         {
@@ -98,6 +99,14 @@ namespace TrabFinal___PeRsH.Controllers
             }
             return RedirectToAction("ManageLogins", new { Message = message });
         }
+
+        //GET : /Account/Perfil
+        public ActionResult Perfil(string nick)
+        {
+            var user = db.Users.Select(x => x).Where(x => x.Nickname == nick).FirstOrDefault();
+            return View(user);
+        }
+
         /*
         //
         // GET: /Manage/AddPhoneNumber
