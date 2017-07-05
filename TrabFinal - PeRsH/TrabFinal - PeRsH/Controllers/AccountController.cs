@@ -10,6 +10,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TrabFinal___PeRsH.Models;
 using System.Collections.Generic;
+using System.Web.Routing;
 
 namespace TrabFinal___PeRsH.Controllers
 {
@@ -68,9 +69,9 @@ namespace TrabFinal___PeRsH.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl, int? id)
         {
-
+            string[] lista = returnUrl.Split('/','.');
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -86,15 +87,16 @@ namespace TrabFinal___PeRsH.Controllers
                 //cria uma variável de sessão com o 'Nickname' do utilizador
                 Session["user"] = nick;
 
+
                 //verificar se o login corresponde ao email****
                 //variavel que vai procurar na bd o email correspondente ao nickname que está a tentar fazer login
                 mailNick = (from user in db.Users where (model.Nickname.Equals(user.Nickname)) select user.Email).FirstOrDefault();
                 //verificar se o mail não é igual ao email passado para lançar um erro
-                    if (!mailNick.Equals(model.Email))
-                    {
-                        ModelState.AddModelError("", string.Format("Introduza as credenciais corretas."));
-                        return View(model);
-                    }
+                if (!mailNick.Equals(model.Email))
+                {
+                    ModelState.AddModelError("", string.Format("Introduza as credenciais corretas."));
+                    return View(model);
+                }
             }
             catch (Exception)
             {
@@ -108,15 +110,17 @@ namespace TrabFinal___PeRsH.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToAction("Index", "Home", null);
-                    //return RedirectToLocal(returnUrl);
-                case SignInStatus.LockedOut:
-                    return View("Lockout");
-                case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    if (id == 0)
+                    {
+                        return RedirectToAction(lista[3], lista[2]);
+                    }
+                    else
+                    {
+                        return RedirectToAction(lista[3], lista[2], new { id = id });
+                    }
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Tentativa de autênticação falhada.");
                     return View(model);
             }
         }

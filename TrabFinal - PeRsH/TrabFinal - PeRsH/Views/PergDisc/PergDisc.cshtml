@@ -4,8 +4,6 @@
     ViewBag.title = "Discussões";
     int temaEsc = ViewBag.temaEsc;
     string temaEscolhido = ViewBag.temaEscolhido;
-    var stateVoteDisc = (bool)Session["stateVoteDisc"];
-    var stateVoteDiscDislike = (bool)Session["stateVoteDiscDislike"];
 }
 <div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#e0e0e0;height:92%;width:20.25%">
     <div class="well" style="background-color:#e0e0e0;border:none">
@@ -52,10 +50,14 @@
                 </div>
                 <div class="btn-group btn-group-justified" style="text-align:right;margin-top:1%;">
                     @{
-                        var numLikesDiscs = Model.likes.Select(x => x).Count();
-                        var numDislikesDiscs = Model.dislikes.Select(x => x).Count();
+                        var numLikesDiscs = Model.likes.Select(x => x).Where(x=>x.DiscussaoFK==item.idDiscussao).Where(x=>x.ComentarioFK==null).Count();
+                        var numDislikesDiscs = Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Count();
                         var utiValDisc = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentarioFK == null).ToList();
                         bool stateEvaluation;
+                        var likes = Model.likes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x=>x.ComentarioFK==null).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
+                        var dislikes = Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
+                        bool stateVoteDisc = likes.Any() ? true : false;
+                        bool stateVoteDiscDislike = dislikes.Any() ? true : false;
                     }
                     @if (utiValDisc.Any())
                     {
@@ -93,20 +95,21 @@
                         }
                         else
                         {
-                            var rate = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x=>x.DiscussaoFK==item.idDiscussao).FirstOrDefault().avaliacao;
-                            <span>Minha avaliação: 
-                            @for (var k = 1; k <= 5; k++)
-                            {
-                                if (k <= rate)
+                            var rate = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.DiscussaoFK == item.idDiscussao).FirstOrDefault().avaliacao;
+                            <span>
+                                Minha avaliação:
+                                @for (var k = 1; k <= 5; k++)
                                 {
-                                <span class="glyphicon glyphicon-star" style="color:#ff8100;border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    if (k <= rate)
+                                    {
+                                        <span class="glyphicon glyphicon-star" style="color:#ff8100;border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    }
+                                    else
+                                    {
+                                        <span class="glyphicon glyphicon-star-empty" style="border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
+                                    }
                                 }
-                                else
-                                {
-                                    <span class="glyphicon glyphicon-star-empty" style="border:none" id="star5" onmouseover="marca(this.id)" onmouseout="desmarca(this.id)"></span>
-                                }
-                            }
-                        </span>
+                            </span>
                         }
                         using (Html.BeginForm(stateVoteDisc == true ? (stateVoteDiscDislike == true ? "" : "RetVote") : (stateVoteDiscDislike == true ? "RetVote" : "Vote"), "PergDisc", new { id = item.idDiscussao }))
                         {
@@ -117,8 +120,8 @@
                                 }
                                 else
                                 {
-                                    <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
-                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                    <button name="btnAction" value="likesDisc" id="btnLike" class="btn btn-sm btn-success" style="width:12%" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" disabled style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
                                 }
 
                             }
@@ -126,8 +129,8 @@
                             {
                                 if (stateVoteDiscDislike == true)
                                 {
-                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
-                                    <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" disabled style="width:12%">@numLikesDiscs <p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" style="width:12%" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)">@numDislikesDiscs <p class="glyphicon glyphicon-thumbs-down"></p></button>
                                 }
                                 else
                                 {
@@ -159,6 +162,10 @@
             var stateOfDislike = Model.dislikes.Select(x => x).Where(x => x.UtilizadorFK == item.UtilizadorFK).ToList();
             var utiAvalComent = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentarioFK == item.comentID).ToList();
             bool stateEvaluationComent;
+            var likes = Model.likes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).Where(x => x.DiscussaoFK == item.DiscussaoFK).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
+            var dislikes = Model.dislikes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).Where(x => x.DiscussaoFK == item.DiscussaoFK).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
+            bool stateLikeComent = likes.Any() ? true : false;
+            bool stateDislikeComent = dislikes.Any() ? true : false;
             if (utiAvalComent.Any())
             {
                 stateEvaluationComent = true;
@@ -223,7 +230,7 @@
                                         }
                                         else
                                         {
-                                            var rate = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x=>x.ComentarioFK==item.comentID).FirstOrDefault().avaliacao;
+                                            var rate = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentarioFK == item.comentID).FirstOrDefault().avaliacao;
                                             <span>
                                                 Minha avaliação:
                                                 @for (var k = 1; k <= 5; k++)
@@ -238,40 +245,42 @@
                                                     }
                                                 }
                                             </span>
-                                        }
-                                        using (Html.BeginForm(stateVoteDisc == true ? (stateVoteDiscDislike == true ? "" : "RetVote") : (stateVoteDiscDislike == true ? "RetVote" : "Vote"), "PergDisc", new { id = item.comentID }))
-                                        {
-                                            if (stateOfLike.Any())
-                                            {
-                                                if (stateOfDislike.Any())
-                                                {
-                                                }
-                                                else
-                                                {
-                                                    <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
-                                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                                    }
+                                                    var identifierLike = "btnLike" + item.comentID;
+                                                    var identifierDislike = "btnDislike" + item.comentID;
+                                                    using (Html.BeginForm(stateLikeComent == true ? (stateDislikeComent == true ? "" : "RetVoteComent") : (stateDislikeComent == true ? "RetVoteComent" : "VoteComent"), "PergDisc", new { idComent = item.comentID, idDisc = item.DiscussaoFK }))
+                                                    {
+                                                        if (stateLikeComent == true)
+                                                        {
+                                                            if (stateDislikeComent == true)
+                                                            {
+                                                            }
+                                                            else
+                                                            {
+                                                    <button name="btnAction" value="likesComent" id="@identifierLike" class="btn btn-sm btn-success" style="width:12%" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                                    <button name="btnAction" value="dislikesComent" class="btn btn-sm btn-danger" id="@identifierDislike" disabled style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
                                                 }
 
-                                            }
+                                        }
                                             else
                                             {
-                                                if (stateOfDislike.Any())
+                                                if (stateDislikeComent == true)
                                                 {
-                                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
-                                                    <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                                    <button name="btnAction" value="likesComent" disabled class="btn btn-sm btn-success" id="@identifierLike"  style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                                    <button name="btnAction" value="dislikesComent" class="btn btn-sm btn-danger" id="@identifierDislike" style="width:12%" onmouseover="mudaThis(this.id)" onmouseout="voltaThis(this.id)">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
                                                 }
                                                 else
                                                 {
-                                                    <button name="btnAction" value="likesDisc" class="btn btn-sm btn-success" id="btnLike" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
-                                                    <button name="btnAction" value="dislikesDisc" class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                                    <button name="btnAction" value="likesComent" class="btn btn-sm btn-success" id="@identifierLike" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                                    <button name="btnAction" value="dislikesComent" class="btn btn-sm btn-danger" id="@identifierDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
                                                     }
                                                 }
                                             }
                                         }
                                         else
                                         {
-                                            <button name="btnAction" value="likesDisc" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
-                                            <button name="btnAction" value="dislikesDisc" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
+                                            <button name="btnAction" value="likesComent" id="btnLike" disabled class="btn btn-sm btn-success" style="width:12%">@numLikes<p class="glyphicon glyphicon-thumbs-up"></p></button>
+                                            <button name="btnAction" value="dislikesComent" disabled class="btn btn-sm btn-danger" id="btnDislike" style="width:12%">@numDislikes<p class="glyphicon glyphicon-thumbs-down"></p></button>
                                         }
                 </div>
             </div>
@@ -288,7 +297,7 @@
         but = document.getElementById(id);
         butValue = but.childNodes[0].nodeValue;
         var codBut = id.substring(3, id.length);
-        but.childNodes[0].nodeValue = "Retirar " + codBut;
+        but.childNodes[0].nodeValue = "Retirar ";
     }
 
     function voltaThis(id) {

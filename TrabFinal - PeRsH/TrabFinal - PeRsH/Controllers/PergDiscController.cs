@@ -39,6 +39,7 @@ namespace TrabFinal___PeRsH.Controllers
             hvm.comentarios = db.Comentarios.Select(x => x);
             hvm.likes = db.Likes.Select(x => x);
             hvm.dislikes = db.Dislikes.Select(x => x);
+            hvm.avaliacao = db.Avaliacao.Select(x => x).ToList();
 
             var temaEscolhido = db.Temas.Select(x => x).Where(x => x.idTema == id).FirstOrDefault().Etiqueta;
             ViewBag.numDisc = db.Discussoes.Select(x => x).Count();
@@ -111,32 +112,7 @@ namespace TrabFinal___PeRsH.Controllers
             ViewBag.numDisc = db.Discussoes.Select(x => x).Count();
             ViewBag.temas = db.Temas.Select(x => x.Etiqueta).ToList();
 
-            var like = db.Likes.Select(x => x).Where(x => x.DiscussaoFK == id).ToList();
-            var dislike = db.Dislikes.Select(x => x).Where(x => x.DiscussaoFK == id).ToList();
-            var aval = db.Avaliacao.Select(x => x).Where(x => x.DiscussaoFK == id).Where(x=>x.ComentarioFK == null).ToList();
-            var utiLikeID = like.Select(x => x.UtilizadorFK).ToList();
-            var utiDislikeID = dislike.Select(x => x.UtilizadorFK).ToList();
-            var utiAval = aval.Select(x => x.UtilizadorFK).ToList();
-            var userId = User.Identity.GetUserId();
-
-            if (utiLikeID.Contains(userId))
-            {
-                Session["stateVoteDiscDislike"] = true;
-                Session["stateVoteDisc"] = false;
-                return View(hvm);
-            }
-            else
-            {
-                if (utiDislikeID.Contains(userId))
-                {
-                    Session["stateVoteDisc"] = true;
-                    Session["stateVoteDiscDislike"] = false;
-                    return View(hvm);
-                }
-                Session["stateVoteDiscDislike"] = false;
-                Session["stateVoteDisc"] = false;
-                return View(hvm);
-            }
+            return View(hvm);
         }
 
         [HttpPost]
@@ -145,8 +121,8 @@ namespace TrabFinal___PeRsH.Controllers
             string option = btnAction.ToString();
             var userId = User.Identity.GetUserId();
             Discussoes discs = db.Discussoes.Find(id);
-            Likes li = db.Likes.Select(x => x).Where(x => x.DiscussaoFK == id).FirstOrDefault();
-            Dislikes dis = db.Dislikes.Select(x => x).Where(x => x.DiscussaoFK == id).FirstOrDefault();
+            Likes li = db.Likes.Select(x => x).Where(x => x.DiscussaoFK == id).Where(x=>x.ComentarioFK==null).Where(x=>x.UtilizadorFK==userId).FirstOrDefault();
+            Dislikes dis = db.Dislikes.Select(x => x).Where(x => x.DiscussaoFK == id).Where(x=>x.ComentarioFK==null).Where(x=>x.UtilizadorFK==userId).FirstOrDefault();
 
             switch (option)
             {
@@ -272,6 +248,80 @@ namespace TrabFinal___PeRsH.Controllers
 
             coment.avaliacao = (from aval in db.Avaliacao where aval.ComentarioFK==idComent select aval.avaliacao).ToList().Average();
             db.SaveChanges();
+
+            return RedirectToAction("PergDisc", "PergDisc", new { id = idDisc });
+        }
+
+        [HttpPost]
+        public ActionResult VoteComent(int idDisc,int idComent, string btnAction)
+        {
+            string option = btnAction.ToString();
+            var userId = User.Identity.GetUserId();
+            Discussoes discs = db.Discussoes.Find(idDisc);
+            Likes li = db.Likes.Select(x => x).Where(x => x.DiscussaoFK == idDisc).Where(x=>x.ComentarioFK==idComent).FirstOrDefault();
+            Dislikes dis = db.Dislikes.Select(x => x).Where(x => x.DiscussaoFK == idDisc).Where(x=>x.ComentarioFK==idComent).FirstOrDefault();
+
+            switch (option)
+            {
+                case "likesComent":
+
+                    if (discs == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    if (li == null)
+                    {
+                        discs.likes = discs.likes + 1;
+                        var newId = db.Likes.Select(x => x.likeID).Count() + 1;
+                        var newLike = new Likes { likeID = newId, dataLike = DateTime.Now, DiscussaoFK = idDisc, ComentarioFK=idComent, UtilizadorFK = userId };
+                        db.Likes.Add(newLike);
+                    }
+                    db.SaveChanges();
+                    break;
+                case "dislikesComent":
+
+                    if (discs == null)
+                    {
+                        return HttpNotFound();
+                    }
+
+                    if (dis == null)
+                    {
+                        discs.dislikes = discs.dislikes + 1;
+                        var newId = db.Dislikes.Select(x => x.dislikeID).Count() + 1;
+                        var newDislike = new Dislikes { dislikeID = newId, dataLike = DateTime.Now, DiscussaoFK = idDisc, ComentarioFK=idComent, UtilizadorFK = userId };
+                        db.Dislikes.Add(newDislike);
+                    }
+                    db.SaveChanges();
+                    break;
+            }
+
+            return RedirectToAction("PergDisc", "PergDisc", new { id = idDisc });
+        }
+
+        public ActionResult RetVoteComent(int idDisc,int idComent, string btnAction)
+        {
+            string option = btnAction.ToString();
+            var userId = User.Identity.GetUserId();
+            Discussoes discs = db.Discussoes.Find(idDisc);
+            Likes li = db.Likes.Select(x => x).Where(x => x.DiscussaoFK == idDisc).Where(x=>x.ComentarioFK==idComent).Where(x=>x.UtilizadorFK==userId).FirstOrDefault();
+            Dislikes dis = db.Dislikes.Select(x => x).Where(x => x.DiscussaoFK == idDisc).Where(x => x.ComentarioFK == idComent).Where(x => x.UtilizadorFK == userId).FirstOrDefault();
+
+            switch (option)
+            {
+                case "likesComent":
+                    discs.likes = discs.likes - 1;
+                    db.Likes.Remove(li);
+                    db.SaveChanges();
+                    break;
+                case "dislikesComent":
+                    discs.dislikes = discs.dislikes - 1;
+                    db.Dislikes.Remove(dis);
+                    db.SaveChanges();
+                    break;
+            }
+
 
             return RedirectToAction("PergDisc", "PergDisc", new { id = idDisc });
         }
