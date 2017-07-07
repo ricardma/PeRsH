@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System;
 using System.Data.Entity.ModelConfiguration.Conventions;
+using System.ComponentModel;
 
 namespace TrabFinal___PeRsH.Models
 {
@@ -20,6 +21,8 @@ namespace TrabFinal___PeRsH.Models
         [Required]
         [Column(TypeName = "date")]
         public DateTime dataNasc { get; set; }
+
+        public string Avatar { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
@@ -51,6 +54,7 @@ namespace TrabFinal___PeRsH.Models
             // não podemos usar a chave seguinte, nesta geração de tabelas
             // por causa das tabelas do Identity (gestão de utilizadores)
             // modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            //
             modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
             modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
             base.OnModelCreating(modelBuilder);

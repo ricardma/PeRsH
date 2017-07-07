@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -10,6 +11,7 @@ using TrabFinal___PeRsH.Models;
 
 namespace TrabFinal___PeRsH.Controllers
 {
+    [Authorize]
     public class DiscussoesController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -37,9 +39,12 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Discussoes/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
             ViewBag.UtilizadorFK = new SelectList(db.Users, "Id", "Nickname");
+            ViewBag.temaEscolhido = id;
+            IEnumerable<Temas> temas = db.Temas.ToList();
+            ViewBag.temas = temas;
             return View();
         }
 
@@ -48,13 +53,26 @@ namespace TrabFinal___PeRsH.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "idDiscussao,dataPublicacao,titulo,conteudo,likes,dislikes,report,UtilizadorFK")] Discussoes discussoes)
+        public ActionResult Create([Bind(Include = "idDiscussao,titulo,conteudo")] Discussoes discussoes, int? id,string[] checkbox)
         {
+            int idT = 0;
+            foreach(var item in checkbox)
+            {
+                idT = Convert.ToInt32(item);
+                Temas tema = db.Temas.Select(x => x).Where(x => x.idTema == idT).FirstOrDefault();
+                discussoes.TemasDiscussoes.Add(tema);
+            }
+            discussoes.avaliacao = 0;
+            discussoes.dataPublicacao = DateTime.Now;
+            discussoes.dislikes = 0;
+            discussoes.likes = 0;
+            discussoes.report = 0;
+            discussoes.UtilizadorFK = User.Identity.GetUserId();
             if (ModelState.IsValid)
             {
                 db.Discussoes.Add(discussoes);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("PergDisc","PergDisc", new { id = id});
             }
 
             ViewBag.UtilizadorFK = new SelectList(db.Users, "Id", "Nickname", discussoes.UtilizadorFK);

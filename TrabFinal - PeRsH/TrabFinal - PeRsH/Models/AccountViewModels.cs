@@ -82,6 +82,8 @@ namespace TrabFinal___PeRsH.Models
         [Column(TypeName = "date")]
         public DateTime dataNasc { get; set; }
 
+        public string Avatar { get; set; }
+
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]

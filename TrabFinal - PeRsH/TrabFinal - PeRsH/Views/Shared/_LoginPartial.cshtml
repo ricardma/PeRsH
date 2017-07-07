@@ -15,19 +15,8 @@
 }
 else
 {
-    string url = "";
-    var id = 0;
-    if(((RazorView)ViewContext.View).ViewPath == "~/Views/Account/Login.cshtml")
-    {
-        url = "~/Views/Temas/Index.cshtml";
-    }
-    else
-    {
-        url = ((RazorView)ViewContext.View).ViewPath;
-        id = Convert.ToInt16(ViewContext.RouteData.Values["id"]);
-    }
     <ul class="nav navbar-nav navbar-right">
         <li>@Html.ActionLink("Registar", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink", @style = "color:white;font-family:Calibri;font-size:15px" })</li>
-        <li>@Html.ActionLink("Sign In", "Login", "Account", routeValues: new { returnUrl = url, id= id }, htmlAttributes: new { id = "loginLink", @style = "color:white;font-family:Calibri;font-size:15px" })</li>
+        <li>@Html.ActionLink("Sign In", "Login", "Account", null, htmlAttributes: new { id = "loginLink", @style = "color:white;font-family:Calibri;font-size:15px" })</li>
     </ul>
 }

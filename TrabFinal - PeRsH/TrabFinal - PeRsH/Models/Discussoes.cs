@@ -24,6 +24,7 @@ namespace TrabFinal___PeRsH.Models
         public DateTime dataPublicacao { get; set; }
 
         [Required]
+        [StringLength(75)]
         [Display(Name = "Título")]
         public string titulo { get; set; }
 

@@ -10,6 +10,7 @@ using TrabFinal___PeRsH.Models;
 
 namespace TrabFinal___PeRsH.Controllers
 {
+    [Authorize]
     public class ComentariosController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();

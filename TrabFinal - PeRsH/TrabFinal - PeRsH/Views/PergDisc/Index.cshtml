@@ -27,21 +27,30 @@
     </div>
 </div>
 
-
-
 <div class="container" style="width:70%;margin-left:25%;">
     <h1 style="color:#06569c">@temaEscolhido</h1>
     @foreach (var item in Model.discussoes)
     {
-        <div style="border:1px solid #06569c;background-color:white;margin-top:2%">
+        <div style="border:1px solid #06569c;background-color:white;margin-top:2%;border-radius:5px">
             <p style="font-size:25px;background-color:#a1c5e5;">@item.titulo</p>
-            @Html.ActionLink(""+ @item.conteudo.Substring(0, 120)+"...","PergDisc","PergDisc", new { id = item.idDiscussao }, new { })
-            <span style="margin-left:1.5%"><b class="glyphicon glyphicon-comment"></b> @Model.comentarios.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
-            <span style="margin-left:0.5%"><b class="glyphicon glyphicon-thumbs-up text-right"></b> @Model.likes.Select(x=>x).Where(x=>x.DiscussaoFK==item.idDiscussao).Where(x=>x.ComentarioFK==null).Count()</span>
-            <span style="margin-left:0.5%"><b class="glyphicon glyphicon-thumbs-down text-right"></b> @Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x=>x.ComentarioFK==null).Count()</span>
-            <span style="margin-left:0.5%"><b class="glyphicon glyphicon-star"></b> @item.avaliacao</span>
+            <div class="container row">
+                <div class="col-sm-9">
+                    @if (item.conteudo.Length < 105)
+                {
+                        @Html.ActionLink("" + @item.conteudo + "...", "PergDisc", "PergDisc", new { id = item.idDiscussao }, new { })
+                    }
+                    else
+                    {
+                        @Html.ActionLink("" + @item.conteudo.Substring(0, 105) + "...", "PergDisc", "PergDisc", new { id = item.idDiscussao }, new { })
+                    }
+                </div>
+                <div style="text-align:right;">
+                    <span style="margin-left:1.5%"><b class="glyphicon glyphicon-comment"></b> @Model.comentarios.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Count()</span>
+                    <span style="margin-left:0.5%"><b class="glyphicon glyphicon-thumbs-up text-right"></b> @Model.likes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Count()</span>
+                    <span style="margin-left:0.5%"><b class="glyphicon glyphicon-thumbs-down text-right"></b> @Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Count()</span>
+                    <span style="margin-left:0.5%"><b class="glyphicon glyphicon-star"></b>@{var ava = item.avaliacao.ToString() == 0 + "" ? "Sem avaliação" : item.avaliacao + "";} @ava</span>
+                </div>
+            </div>
         </div>
     }
 </div>
-
-

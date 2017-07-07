@@ -71,7 +71,7 @@ namespace TrabFinal___PeRsH.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Login(LoginViewModel model, string returnUrl, int? id)
         {
-            string[] lista = returnUrl.Split('/','.');
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -110,13 +110,12 @@ namespace TrabFinal___PeRsH.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    if (id == 0)
-                    {
-                        return RedirectToAction(lista[3], lista[2]);
+                    if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) {
+                        return Redirect(returnUrl);
                     }
                     else
                     {
-                        return RedirectToAction(lista[3], lista[2], new { id = id });
+                        return RedirectToAction("Index","Temas");
                     }
                 case SignInStatus.Failure:
                 default:
@@ -252,6 +251,7 @@ namespace TrabFinal___PeRsH.Controllers
                         Nickname = model.Nickname,
                         dataNasc = DateTime.Parse(dia + "-" + mes + "-" + ano),
                         UserName = model.Email,
+                        Avatar = model.Avatar == null ? "DefaultAvatar.jpg" : model.Avatar,
                         Email = model.Email
                     };
                     var result = await UserManager.CreateAsync(user, model.Password);

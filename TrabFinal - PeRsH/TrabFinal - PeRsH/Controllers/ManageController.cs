@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using TrabFinal___PeRsH.Models;
+using System.Drawing;
+using System.IO;
 
 namespace TrabFinal___PeRsH.Controllers
 {
@@ -100,11 +102,39 @@ namespace TrabFinal___PeRsH.Controllers
             return RedirectToAction("ManageLogins", new { Message = message });
         }
 
-        //GET : /Account/Perfil
+        //GET : /Manage/Perfil
         public ActionResult Perfil(string nick)
         {
             var user = db.Users.Select(x => x).Where(x => x.Nickname == nick).FirstOrDefault();
-            return View(user);
+            var userId = user.Id;
+            HomeViewModel vi = new HomeViewModel();
+            vi.temas = db.Temas.ToList();
+            vi.discussoes = db.Discussoes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+            vi.comentarios = db.Comentarios.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+            vi.likes = db.Likes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+            vi.dislikes = db.Dislikes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+            vi.avaliacao = db.Avaliacao.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+
+            Tuple<ApplicationUser, HomeViewModel> tu = new Tuple<ApplicationUser, HomeViewModel>(user, vi);
+            return View(tu);
+        }
+
+        //POST: /Manage/Perfil
+        [HttpPost]
+        public ActionResult Perfil(HttpPostedFileBase file)
+        {
+            if (file != null && file.ContentLength > 0 && file.ContentType.Contains("image"))
+            {
+                var pastaImagem = Server.MapPath("~/Avatars");
+                var userId = User.Identity.GetUserId();
+                var nomeFicheiro = Path.GetFileName("Avatar"+file.FileName+userId);
+                var caminho = Path.Combine(pastaImagem,nomeFicheiro);
+                file.SaveAs(caminho);
+                var user = db.Users.Select(x => x).Where(x=>x.Id==userId).FirstOrDefault();
+                user.Avatar = nomeFicheiro;
+                db.SaveChanges();
+            }
+            return View();
         }
 
         /*
