@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -50,18 +51,25 @@ namespace TrabFinal___PeRsH.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "comentID,conteudo,dataComentario,likes,dislikes,report,DiscussaoFK,UtilizadorFK")] Comentarios comentarios)
+        public ActionResult Create(int? id,string textArea)
         {
-            if (ModelState.IsValid)
+            int idDisc = Convert.ToInt32(id);
+            Comentarios coment = new Comentarios();
+            if (!string.IsNullOrEmpty(textArea))
             {
-                db.Comentarios.Add(comentarios);
+                coment.conteudo = textArea;
+                coment.dataComentario = DateTime.Now;
+                coment.likes = 0;
+                coment.dislikes = 0;
+                coment.report = 0;
+                coment.DiscussaoFK = idDisc;
+                coment.UtilizadorFK = User.Identity.GetUserId();
+                db.Comentarios.Add(coment);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("PergDisc","PergDisc",new { id = id });
             }
-
-            ViewBag.DiscussaoFK = new SelectList(db.Discussoes, "idDiscussao", "titulo", comentarios.DiscussaoFK);
-            ViewBag.UtilizadorFK = new SelectList(db.Users, "Id", "Nickname", comentarios.UtilizadorFK);
-            return View(comentarios);
+            ModelState.AddModelError("", "Erro! O comentário não pode ser vazio!");
+            return View("PergDisc","PergDisc", new { id = id });
         }
 
         // GET: Comentarios/Edit/5

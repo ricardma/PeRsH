@@ -4,6 +4,7 @@
     ViewBag.title = "Discussões";
     int temaEsc = ViewBag.temaEsc;
     string temaEscolhido = ViewBag.temaEscolhido;
+    int discussaoEscolhida = 0;
 }
 <div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#e0e0e0;height:92%;width:20.25%">
     <div class="well" style="background-color:#e0e0e0;border:none">
@@ -30,6 +31,8 @@
     <div style="background-color:white">
         @foreach (var item in Model.discussoes)
         {
+            discussaoEscolhida = item.idDiscussao;
+            
             <div style="margin-top:1%;height:90%">
                 <h1 style="background-color:#06569c;color:white">@item.titulo</h1>
                 <div class="container row">
@@ -154,9 +157,27 @@
             </div>
                                 }
     </div>
-    <div style="background-color:white;margin-top:0%">
+    @if (User.Identity.IsAuthenticated)
+    {
+        using (Html.BeginForm("Create", "Comentarios", new { id = discussaoEscolhida}))
+        {
+        @Html.AntiForgeryToken()
+
+            <div style="background-color:white;margin-top:0%">
+                <div style="background-color:#06569c;">
+                    <span style="font-size:30px;color:white">Adicionar Comentário</span>
+                </div>
+                <textarea name="textArea" cols="128" rows="12" style="max-width:100%;resize:none;border:none;" placeholder="Escrever aqui o comentário..."></textarea>
+            </div>
+            <div style="text-align:right">
+                <button type="submit" class="btn btn-md btn-info" style="width:12%;margin-top:1%">Enviar</button>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            </div>
+        }
+    }
+    <div style="background-color:white;margin-top:2%">
         <div style="background-color:#06569c;">
-            <span style="font-size:36px;color:white">Comentários</span>
+            <span style="font-size:32px;color:white">Comentários</span>
         </div>
         @{ var i = 1;}
         @foreach (var item in Model.comentarios.OrderByDescending(x => x.dataComentario).ToList())
