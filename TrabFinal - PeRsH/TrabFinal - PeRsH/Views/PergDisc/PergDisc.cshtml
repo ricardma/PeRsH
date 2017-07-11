@@ -9,18 +9,19 @@
 <div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#e0e0e0;height:92%;width:20.25%">
     <div class="well" style="background-color:#e0e0e0;border:none">
         <br />
-        <p style="text-align:center;color:#333333;font-size:2.5vmin"><b>Estatísticas do Site</b></p>
+        <p style="text-align:center;color:#333333;font-size:2.5vmin"><b>Estatísticas deste Discussão</b></p>
         <p style="color:#06569c">Número de Temas: <span class="badge">@Model.temas.Count()</span></p>
         <p style="color:#06569c">Número de Discussões: <span class="badge">@ViewBag.numDisc</span></p>
         <p style="color:#06569c">Número de Comentários: <span class="badge">@Model.comentarios.Count()</span></p>
         <p style="color:#06569c">Número de Likes: <span class="badge">@Model.likes.Count()</span></p>
         <p style="color:#06569c">Número de Dislikes: <span class="badge">@Model.dislikes.Count()</span></p>
+        <p style="color:#06569c">Número de Avaliações: <span class="badge">@Model.avaliacao.Count()</span></p>
     </div>
     <div class="well" style="background-color:#e0e0e0;border:none;text-align:center">
         <label>Pesquisa:</label>
         @using (Html.BeginForm("Pesquisa", "PergDisc"))
             {
-            <textarea name="btnPesq" placeholder="Insira a sua pergunta" rows="6" maxlength="120"></textarea>
+            <input name="btnPesq" placeholder="Insira a sua pergunta" rows="6" maxlength="120" />
             <button class="btn btn-default" style="border:1px solid #a9a9a9"><p class="glyphicon glyphicon-search"></p></button>
         }
     </div>
@@ -32,15 +33,16 @@
         @foreach (var item in Model.discussoes)
         {
             discussaoEscolhida = item.idDiscussao;
-            
+
             <div style="margin-top:1%;height:90%">
                 <h1 style="background-color:#06569c;color:white">@item.titulo</h1>
                 <div class="container row">
                     <div class="col-lg-6">
                         <span style="margin-top:1%">
                             <label class="label-info">Autor:</label>@Html.ActionLink(" " + item.User.Nickname, "Perfil", "Manage", new { nick = item.User.Nickname }, new { })
+                            <img src="~/Avatars/@item.User.Avatar" style="width:5%;height:5%" />
                         </span><br />
-                        <span><label class="label-info">Avaliação:</label> @{var ava = item.avaliacao.ToString() == 0+"" ? "Ainda não foi avaliada" : item.avaliacao+"";} @ava</span>
+                        <span><label class="label-info">Avaliação:</label> @{var ava = item.avaliacao.ToString() == 0 + "" ? "Ainda não foi avaliada" : item.avaliacao + "";} @ava</span>
                     </div>
                     <div class="col-lg-6" style="text-align:right">
                         <span><label class="label-info">Data da Publicação:</label> @item.dataPublicacao.Day/@item.dataPublicacao.Month/@item.dataPublicacao.Year</span>
@@ -52,7 +54,44 @@
                     </div>
                 </div>
                 <div class="container row">
-                    <div class="col-lg-6" style="margin-top:1%">Denunciar</div>
+                    @using (Html.BeginForm("Create", "Reports", new { id = item.idDiscussao }))
+                    {
+                        <div class="col-lg-6" style="margin-top:2%">
+                            @{ var reps = Model.reports.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId());}
+                            @Html.AntiForgeryToken()
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                if (!reps.Any())
+                                {
+                                    <div class="container" style="padding:0px">
+                                        <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#discModal">
+                                            <span class="glyphicon glyphicon-remove"></span> Denunciar Discussão
+                                        </button>
+                                        <div id="discModal" class="modal fade" role="dialog" style="text-align:center;overflow-y:hidden;">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content" style="background-color:#f5f5f5">
+                                                    <div class="modal-header" style="border-bottom:1px solid #06569c">
+                                                        <h1 class="modal-title" style="color:#06569c">Porque motivo deseja denunciar esta discussão?</h1>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <textarea name="textAreaReportDisc" cols="128" rows="12" style="max-width:100%;resize:none;border:none;" placeholder="Escrever aqui o motivo da denuncia..."></textarea>
+                                                    </div>
+                                                    <div class="modal-footer" style="border-top:1px solid #06569c;text-align:center">
+                                                        <button type="submit" class="btn btn-sm btn-default">Enviar Denúncia</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span>Já denunciou esta discussão</span>
+                                }
+                            }
+                        </div>
+
+                                }
                     <div class="col-lg-6">
                         <div class="btn-group btn-group-justified" style="text-align:right;margin-top:1%">
                             @{
@@ -159,19 +198,22 @@
     </div>
     @if (User.Identity.IsAuthenticated)
     {
-        using (Html.BeginForm("Create", "Comentarios", new { id = discussaoEscolhida}))
+        using (Html.BeginForm("Create", "Comentarios", new { id = discussaoEscolhida }))
         {
-        @Html.AntiForgeryToken()
-
+            @Html.AntiForgeryToken()
             <div style="background-color:white;margin-top:0%">
                 <div style="background-color:#06569c;">
                     <span style="font-size:30px;color:white">Adicionar Comentário</span>
                 </div>
                 <textarea name="textArea" cols="128" rows="12" style="max-width:100%;resize:none;border:none;" placeholder="Escrever aqui o comentário..."></textarea>
             </div>
-            <div style="text-align:right">
-                <button type="submit" class="btn btn-md btn-info" style="width:12%;margin-top:1%">Enviar</button>
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="container row">
+                <div class="col-lg-6" style="margin-top:1.5%">
+                    <span class="text-danger">@TempData["Erro"]</span>
+                </div>
+                <div class="col-lg-6" style="text-align:right">
+                    <button type="submit" class="btn btn-md btn-info" style="width:25%;margin-top:1%">Enviar</button>
+                </div>
             </div>
         }
     }
@@ -179,9 +221,11 @@
         <div style="background-color:#06569c;">
             <span style="font-size:32px;color:white">Comentários</span>
         </div>
-        @{ var i = 1;}
-        @foreach (var item in Model.comentarios.OrderByDescending(x => x.dataComentario).ToList())
+        @{ var i = 1;
+            IEnumerable<TrabFinal___PeRsH.Models.Comentarios> listaComentarios = Model.comentarios.OrderByDescending(x => x.comentID).ToList();}
+        @foreach (var item in listaComentarios)
         {
+            var nomeBot = "botDenunc" + item.comentID;
             var numLikes = Model.likes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).ToList().Count();
             var numDislikes = Model.dislikes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).ToList().Count();
             var stateOfLike = Model.likes.Select(x => x).Where(x => x.UtilizadorFK == item.UtilizadorFK).ToList();
@@ -205,6 +249,7 @@
                     <div class="col-lg-6" style="padding-left:0%">
                         <span style="margin-top:1%">
                             <label class="label-info">Autor:</label>@Html.ActionLink(" " + item.User.Nickname, "Perfil", "Manage", new { nick = item.User.Nickname }, new { })
+                            <img src="~/Avatars/@item.User.Avatar" style="width:5%;height:5%" />
                         </span><br />
                         <span><label class="label-info">Avaliação:</label>@{var ava = item.avaliacao.ToString() == 0 + "" ? "Ainda não foi avaliado" : item.avaliacao + "";} @ava</span>
                     </div>
@@ -218,7 +263,25 @@
                     </div>
                 </div>
                 <div class="container row">
-                    <div class="col-lg-6" style="margin-top:1%">Denunciar</div>
+                    <div class="col-lg-6" style="margin-top:2%">
+                        @{var reps = Model.comentReports.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentariosFK == item.comentID);
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            if (!reps.Any())
+                            {
+                                using (Html.BeginForm("Create", "ComentReports", new { idDisc = item.DiscussaoFK, idComent = item.comentID }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm">Enviar Denúncia</button>
+                                }
+                            }
+                            else
+                            {
+                                <span> Já denunciou este comentário </span>
+                            }
+                        }
+                    </div>
                     <div class="col-lg-6">
                         <div class="btn-group btn-group-justified" style="text-align:right;margin-top:1%;">
                             @if (User.Identity.IsAuthenticated)
@@ -315,6 +378,7 @@
                     </div>
                     <hr style="border:1px solid #808080;margin-top:0%" />
                 </div>
+
             </div>
                                                 }
     </div>

@@ -55,8 +55,8 @@ namespace TrabFinal___PeRsH.Models
             // por causa das tabelas do Identity (gestão de utilizadores)
             // modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
             //
-            modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
-            modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
+            //modelBuilder.Conventions.Remove<OneToManyCascadeDeleteConvention>();
+            //modelBuilder.Conventions.Remove<ManyToManyCascadeDeleteConvention>();
             base.OnModelCreating(modelBuilder);
         }
 

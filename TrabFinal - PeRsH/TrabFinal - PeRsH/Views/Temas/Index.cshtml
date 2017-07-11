@@ -19,16 +19,16 @@
                 @Html.ActionLink("Apagar", "Delete", new { id = item.idTema })
             }
         }
-
+        
         @if (User.IsInRole("Admin"))
         {
-            @Html.ActionLink("Criar Tema", "Create", "Temas")
-        }
-        else
-        {
+            @Html.ActionLink("Criar Tema", "Create", "Temas", new { @class = "btn btn-default btn-lg", @style= "height:10%;width:25%;margin-top:2%;margin-left:4.6%; background-color:darkblue;border:1px solid darkblue;color:white;font-size:2.5vmin" })
+       }@*
+            else
+            {
             <h2 style="color:darkblue;margin-left:5%;margin-top:5%;font-size:3vmin">A sua dúvida não se encaixa nestes temas? Indique-nos qual <b class="glyphicon glyphicon-share"></b></h2>
             <input type="submit" name="bt" value="Sugerir um tema" class="btn btn-primary btn-lg" style="height:10%;width:100%;margin-top:2%;margin-left:5%;background-color:#428bca;border:1px solid #428bca;color:white;font-size:2.5vmin" />
-        }
+        }*@
     </div>
 }
 

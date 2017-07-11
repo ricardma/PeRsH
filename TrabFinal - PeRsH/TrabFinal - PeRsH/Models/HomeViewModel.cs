@@ -13,5 +13,7 @@ namespace TrabFinal___PeRsH.Models
         public IEnumerable<Likes> likes;
         public IEnumerable<Dislikes> dislikes;
         public IEnumerable<Avaliacao> avaliacao;
+        public IEnumerable<Reports> reports;
+        public IEnumerable<ComentReports> comentReports;
     }
 }

@@ -7,7 +7,7 @@
 
     <ul class="nav navbar-nav navbar-right">
         <li>
-            @Html.ActionLink("Olá " + Session["user"] + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage", @style = "color:white" })
+            @Html.ActionLink("Olá " + Session["user"] + "!", "Perfil", "Manage", new {  nick = Session["user"] }, htmlAttributes: new { title = "Manage", @style = "color:white" })
         </li>
         <li><a href="javascript:document.getElementById('logoutForm').submit()" style="color:white">Log off</a></li>
     </ul>

@@ -17,6 +17,7 @@ namespace TrabFinal___PeRsH.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Discussoes
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             var discussoes = db.Discussoes.Include(d => d.User);
@@ -24,6 +25,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Discussoes/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -56,30 +58,38 @@ namespace TrabFinal___PeRsH.Controllers
         public ActionResult Create([Bind(Include = "idDiscussao,titulo,conteudo")] Discussoes discussoes, int? id,string[] checkbox)
         {
             int idT = 0;
-            foreach(var item in checkbox)
+            try
             {
-                idT = Convert.ToInt32(item);
-                Temas tema = db.Temas.Select(x => x).Where(x => x.idTema == idT).FirstOrDefault();
-                discussoes.TemasDiscussoes.Add(tema);
+                foreach (var item in checkbox)
+                {
+                    idT = Convert.ToInt32(item);
+                    Temas tema = db.Temas.Select(x => x).Where(x => x.idTema == idT).FirstOrDefault();
+                    discussoes.TemasDiscussoes.Add(tema);
+                }
+                discussoes.avaliacao = 0;
+                discussoes.dataPublicacao = DateTime.Now;
+                discussoes.dislikes = 0;
+                discussoes.likes = 0;
+                discussoes.UtilizadorFK = User.Identity.GetUserId();
+                if (ModelState.IsValid)
+                {
+                    db.Discussoes.Add(discussoes);
+                    db.SaveChanges();
+                    return RedirectToAction("PergDisc", "PergDisc", new { id = id });
+                }
             }
-            discussoes.avaliacao = 0;
-            discussoes.dataPublicacao = DateTime.Now;
-            discussoes.dislikes = 0;
-            discussoes.likes = 0;
-            discussoes.report = 0;
-            discussoes.UtilizadorFK = User.Identity.GetUserId();
-            if (ModelState.IsValid)
+            catch (Exception)
             {
-                db.Discussoes.Add(discussoes);
-                db.SaveChanges();
-                return RedirectToAction("PergDisc","PergDisc", new { id = id});
+                IEnumerable<Temas> temas = db.Temas.ToList();
+                ViewBag.temas = temas;
+                ModelState.AddModelError("", string.Format("Erro! Introduza pelo menos um Tema para a Discussão."));
+                return View(discussoes);
             }
-
-            ViewBag.UtilizadorFK = new SelectList(db.Users, "Id", "Nickname", discussoes.UtilizadorFK);
             return View(discussoes);
         }
 
         // GET: Discussoes/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -100,6 +110,7 @@ namespace TrabFinal___PeRsH.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "idDiscussao,dataPublicacao,titulo,conteudo,likes,dislikes,report,UtilizadorFK")] Discussoes discussoes)
         {
             if (ModelState.IsValid)
@@ -113,7 +124,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Discussoes/Delete/5
-        public ActionResult Delete(int? id)
+        /*public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -125,17 +136,19 @@ namespace TrabFinal___PeRsH.Controllers
                 return HttpNotFound();
             }
             return View(discussoes);
-        }
+        }*/
 
         // POST: Discussoes/Delete/5
-        [HttpPost, ActionName("Delete")]
+        //[HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [Authorize(Roles="Admin")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
             Discussoes discussoes = db.Discussoes.Find(id);
             db.Discussoes.Remove(discussoes);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Reports");
         }
 
         protected override void Dispose(bool disposing)

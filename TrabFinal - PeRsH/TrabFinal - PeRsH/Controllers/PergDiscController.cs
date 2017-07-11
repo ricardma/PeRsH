@@ -40,6 +40,8 @@ namespace TrabFinal___PeRsH.Controllers
             hvm.likes = db.Likes.Select(x => x);
             hvm.dislikes = db.Dislikes.Select(x => x);
             hvm.avaliacao = db.Avaliacao.Select(x => x).ToList();
+            hvm.reports = db.Reports.Select(x => x).ToList();
+            hvm.comentReports = db.ComentReports.Select(x => x).ToList();
 
             var temaEscolhido = db.Temas.Select(x => x).Where(x => x.idTema == id).FirstOrDefault().Etiqueta;
             ViewBag.numDisc = db.Discussoes.Select(x => x).Count();
@@ -72,6 +74,7 @@ namespace TrabFinal___PeRsH.Controllers
             hvm.comentarios = db.Comentarios.Select(x => x).ToList();
             hvm.likes = db.Likes.Select(x => x).ToList();
             hvm.dislikes = db.Dislikes.Select(x => x).ToList();
+            hvm.avaliacao = db.Avaliacao.Select(x => x).ToList();
 
             ViewBag.listPesq = list;
 
@@ -95,7 +98,7 @@ namespace TrabFinal___PeRsH.Controllers
                 //caso o tema não seja encontrado, redireciona para a view INDEX
                 return RedirectToAction("Index","Temas");
             }
-
+            
             HomeViewModel hvm = new HomeViewModel();
             hvm.temas = db.Temas.ToList();
             hvm.discussoes = (from disc in db.Discussoes where disc.idDiscussao == id select disc).ToList();
@@ -103,6 +106,8 @@ namespace TrabFinal___PeRsH.Controllers
             hvm.likes = db.Likes.Select(x => x).Where(x => x.DiscussaoFK == id).ToList();
             hvm.dislikes = db.Dislikes.Select(x => x).Where(x => x.DiscussaoFK == id).ToList();
             hvm.avaliacao = db.Avaliacao.Select(x => x).Where(x => x.DiscussaoFK == id).ToList();
+            hvm.reports = db.Reports.Select(x => x).Where(x => x.DiscussaoFK == id).ToList();
+            hvm.comentReports = db.ComentReports.Select(x => x).ToList();
 
             var temaEscolhido = db.Temas.Select(x => new { x.idTema, x.TemasDiscussoes, x.Etiqueta }).Where(x => x.TemasDiscussoes.Any(y => y.idDiscussao == id)).FirstOrDefault();
             ViewBag.temaEsc = temaEscolhido.idTema;
@@ -116,6 +121,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult Vote(int id,string btnAction)
         {
             string option = btnAction.ToString();
@@ -164,7 +170,7 @@ namespace TrabFinal___PeRsH.Controllers
 
             return RedirectToAction("PergDisc","PergDisc",new { id = id});
         }
-
+        [Authorize]
         public ActionResult RetVote(int id, string btnAction)
         {
             string option = btnAction.ToString();
@@ -194,6 +200,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult avaliaDisc(int id, string btnAvalDisc)
         {
             string option = btnAvalDisc.ToString();
@@ -222,6 +229,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult avaliaComent(int idComent,int idDisc,string btnAvalComent)
         {
             string option = btnAvalComent.ToString();
@@ -253,6 +261,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public ActionResult VoteComent(int idDisc,int idComent, string btnAction)
         {
             string option = btnAction.ToString();
@@ -299,7 +308,7 @@ namespace TrabFinal___PeRsH.Controllers
 
             return RedirectToAction("PergDisc", "PergDisc", new { id = idDisc });
         }
-
+        [Authorize]
         public ActionResult RetVoteComent(int idDisc,int idComent, string btnAction)
         {
             string option = btnAction.ToString();

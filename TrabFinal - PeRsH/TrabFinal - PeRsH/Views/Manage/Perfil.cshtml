@@ -1,20 +1,41 @@
-﻿
+﻿@using Microsoft.AspNet.Identity
 @model Tuple<TrabFinal___PeRsH.Models.ApplicationUser, TrabFinal___PeRsH.Models.HomeViewModel>
 @{
-
+    var userId = User.Identity.GetUserId();
 }
 
 <div class="container">
     <div class="row">
-        <div class="col-lg-3">
-            <img class="img-circle" src="~/Avatars/@Model.Item1.Avatar" />
+        <div class="col-lg-3" style="text-align:center">
+            <img class="img-circle" style="background-color:white;margin-top:10%" src="~/Avatars/@Model.Item1.Avatar" />
+            @if (userId == Model.Item1.Id) {
+                using (Html.BeginForm("Perfil", "Manage", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                {
+                    <input type="file" name="file" />
+                    <button type="submit">Submeter nova imagem</button><br />
+                    <span id="errorMessage" class="text-danger">@TempData["erro"]</span>
+                }
+            }
+        </div>
+        <div class="col-lg-6">
+            <h1 style="color:#06569c">@Model.Item1.Nickname</h1>
+            <p>Número de Discussões: <span class="badge">@Model.Item2.discussoes.Count()</span></p>
+            <p>Número de Comentários: <span class="badge">@Model.Item2.comentarios.Count()</span></p>
+            <p>Número de Likes: <span class="badge">@Model.Item2.likes.Count()</span></p>
+            <p>Número de Dislikes: <span class="badge">@Model.Item2.dislikes.Count()</span></p>
+            <p>Número de Avaliações: <span class="badge">@Model.Item2.avaliacao.Count()</span></p>
+            <p>Data Nascimento: <span class="badge">@Model.Item1.dataNasc</span></p>
+            @if (userId == Model.Item1.Id)
+            {
+                <h4>Mudar Password:<span style="font-size:15px">@Html.ActionLink("Mudar Password", "ChangePassword")</span></h4>
+            }
         </div>
     </div>
 </div>
 
-
-@using (Html.BeginForm("Perfil", "Manage", FormMethod.Post, new { enctype="multipart/form-data" }))
-{
-    <input type="file" name="file"/>
-        <button type="submit">submeter</button>
-}
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#errorMessage").fadeOut(7000);
+    })
+</script>

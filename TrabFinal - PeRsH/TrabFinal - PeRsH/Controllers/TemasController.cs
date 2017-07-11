@@ -23,6 +23,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Temas/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             //Caso o 'id' do TEMA for nulo
@@ -45,6 +46,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Temas/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             return View();
@@ -72,6 +74,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Temas/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             //verifica se o 'id' do TEMA é nulo
@@ -97,6 +100,7 @@ namespace TrabFinal___PeRsH.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "idTema,Etiqueta")] Temas temas)
         {
             //confronta se os dados introduzidos pelo Model são consistentes
@@ -114,6 +118,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Temas/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(int? id)
         {
             //caso o 'id' do TEMA seja nulo
@@ -135,6 +140,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // POST: Temas/Delete/5
+        [Authorize(Roles = "Admin")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

@@ -26,9 +26,6 @@ namespace TrabFinal___PeRsH.Models
         [Display(Name = "Não Gosto")]
         public int dislikes { get; set; }
 
-        [Display(Name = "Número de Reports")]
-        public int report { get; set; }
-
         [Display(Name = "Avaliação")]
         public double avaliacao { get; set; }
 

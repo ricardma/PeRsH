@@ -77,7 +77,6 @@ namespace TrabFinal___PeRsH.Controllers
                 return View(model);
             }
 
-            string mailNick = "";
             string nick = "";
 
             try
@@ -86,17 +85,6 @@ namespace TrabFinal___PeRsH.Controllers
                 nick = (from utilizador in db.Users where (utilizador.Email == model.Email) select utilizador.Nickname).First();
                 //cria uma variável de sessão com o 'Nickname' do utilizador
                 Session["user"] = nick;
-
-
-                //verificar se o login corresponde ao email****
-                //variavel que vai procurar na bd o email correspondente ao nickname que está a tentar fazer login
-                mailNick = (from user in db.Users where (model.Nickname.Equals(user.Nickname)) select user.Email).FirstOrDefault();
-                //verificar se o mail não é igual ao email passado para lançar um erro
-                if (!mailNick.Equals(model.Email))
-                {
-                    ModelState.AddModelError("", string.Format("Introduza as credenciais corretas."));
-                    return View(model);
-                }
             }
             catch (Exception)
             {

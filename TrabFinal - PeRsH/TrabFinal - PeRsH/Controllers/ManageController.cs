@@ -55,7 +55,7 @@ namespace TrabFinal___PeRsH.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        /*public async Task<ActionResult> Index(ManageMessageId? message)
         {
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
@@ -100,41 +100,54 @@ namespace TrabFinal___PeRsH.Controllers
                 message = ManageMessageId.Error;
             }
             return RedirectToAction("ManageLogins", new { Message = message });
-        }
+        }*/
 
         //GET : /Manage/Perfil
         public ActionResult Perfil(string nick)
         {
-            var user = db.Users.Select(x => x).Where(x => x.Nickname == nick).FirstOrDefault();
-            var userId = user.Id;
-            HomeViewModel vi = new HomeViewModel();
-            vi.temas = db.Temas.ToList();
-            vi.discussoes = db.Discussoes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
-            vi.comentarios = db.Comentarios.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
-            vi.likes = db.Likes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
-            vi.dislikes = db.Dislikes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
-            vi.avaliacao = db.Avaliacao.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+            try
+            {
+                var user = db.Users.Select(x => x).Where(x => x.Nickname == nick).FirstOrDefault();
+                var userId = user.Id;
+                HomeViewModel vi = new HomeViewModel();
+                vi.temas = db.Temas.ToList();
+                vi.discussoes = db.Discussoes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+                vi.comentarios = db.Comentarios.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+                vi.likes = db.Likes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+                vi.dislikes = db.Dislikes.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
+                vi.avaliacao = db.Avaliacao.Select(x => x).Where(x => x.UtilizadorFK == userId).ToList();
 
-            Tuple<ApplicationUser, HomeViewModel> tu = new Tuple<ApplicationUser, HomeViewModel>(user, vi);
-            return View(tu);
+                Tuple<ApplicationUser, HomeViewModel> tu = new Tuple<ApplicationUser, HomeViewModel>(user, vi);
+                return View(tu);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Temas");
+            }
         }
 
         //POST: /Manage/Perfil
         [HttpPost]
         public ActionResult Perfil(HttpPostedFileBase file)
         {
+            var userId = User.Identity.GetUserId();
+            var userNick = db.Users.Select(x => x).Where(x => x.Id == userId).FirstOrDefault().Nickname;
             if (file != null && file.ContentLength > 0 && file.ContentType.Contains("image"))
             {
                 var pastaImagem = Server.MapPath("~/Avatars");
-                var userId = User.Identity.GetUserId();
                 var nomeFicheiro = Path.GetFileName("Avatar"+file.FileName+userId);
                 var caminho = Path.Combine(pastaImagem,nomeFicheiro);
                 file.SaveAs(caminho);
                 var user = db.Users.Select(x => x).Where(x=>x.Id==userId).FirstOrDefault();
                 user.Avatar = nomeFicheiro;
                 db.SaveChanges();
+                return RedirectToAction("Perfil", new { nick = userNick });
             }
-            return View();
+            else
+            {
+                TempData["erro"] = "Não foi possivel carregar a imagem.";
+                return RedirectToAction("Perfil",new { nick = userNick });
+            }
         }
 
         /*

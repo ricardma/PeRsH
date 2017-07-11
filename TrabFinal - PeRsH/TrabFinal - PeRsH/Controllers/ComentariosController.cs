@@ -17,6 +17,7 @@ namespace TrabFinal___PeRsH.Controllers
         private ApplicationDbContext db = new ApplicationDbContext();
 
         // GET: Comentarios
+        [Authorize(Roles = "Admin")]
         public ActionResult Index()
         {
             var comentarios = db.Comentarios.Include(c => c.Discussoes).Include(c => c.User);
@@ -24,6 +25,7 @@ namespace TrabFinal___PeRsH.Controllers
         }
 
         // GET: Comentarios/Details/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Details(int? id)
         {
             if (id == null)
@@ -61,18 +63,18 @@ namespace TrabFinal___PeRsH.Controllers
                 coment.dataComentario = DateTime.Now;
                 coment.likes = 0;
                 coment.dislikes = 0;
-                coment.report = 0;
                 coment.DiscussaoFK = idDisc;
                 coment.UtilizadorFK = User.Identity.GetUserId();
                 db.Comentarios.Add(coment);
                 db.SaveChanges();
                 return RedirectToAction("PergDisc","PergDisc",new { id = id });
             }
-            ModelState.AddModelError("", "Erro! O comentário não pode ser vazio!");
-            return View("PergDisc","PergDisc", new { id = id });
+            TempData["Erro"] = string.Format("Erro! O comentário não pode ser vazio!");
+            return RedirectToAction("PergDisc","PergDisc", new { id = idDisc });
         }
 
         // GET: Comentarios/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -94,6 +96,7 @@ namespace TrabFinal___PeRsH.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "comentID,conteudo,dataComentario,likes,dislikes,report,DiscussaoFK,UtilizadorFK")] Comentarios comentarios)
         {
             if (ModelState.IsValid)
@@ -107,8 +110,9 @@ namespace TrabFinal___PeRsH.Controllers
             return View(comentarios);
         }
 
+
         // GET: Comentarios/Delete/5
-        public ActionResult Delete(int? id)
+        /*public ActionResult Delete(int? id)
         {
             if (id == null)
             {
@@ -120,17 +124,19 @@ namespace TrabFinal___PeRsH.Controllers
                 return HttpNotFound();
             }
             return View(comentarios);
-        }
+        }*/
 
         // POST: Comentarios/Delete/5
-        [HttpPost, ActionName("Delete")]
+        //[HttpPost, ActionName("Delete")]
+        [Authorize(Roles = "Admin")]
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public ActionResult Delete(int id)
         {
             Comentarios comentarios = db.Comentarios.Find(id);
             db.Comentarios.Remove(comentarios);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","ComentReports");
         }
 
         protected override void Dispose(bool disposing)

@@ -17,6 +17,9 @@ namespace TrabFinal___PeRsH.Models
         [Display(Name = "Razão do Report")]
         public string razRep { get; set; }
 
+        [NotMapped]
+        public bool visto { get; set; }
+
         //********************************
         //*CRIACAO DAS CHAVES FORASTEIRAS*
         //********************************

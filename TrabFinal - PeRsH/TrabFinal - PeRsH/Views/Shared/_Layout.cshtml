@@ -60,6 +60,15 @@
                                         <li>@Html.ActionLink("Criar uma Discussão", "Create", "Discussoes", new { id = idTema }, new { @style = "color:white;font-family:Calibri;font-size:15px" })</li>
                                         }
                                     }
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li>
+                                @Html.ActionLink("Denúncias das Discussões", "Index", "Reports",null, new { @style = "color:white;font-family:Calibri;font-size:15px" })
+                            </li>
+                            <li>
+                                @Html.ActionLink("Denúncias dos Comentários", "Index", "ComentReports",null, new { @style = "color:white;font-family:Calibri;font-size:15px" })
+                            </li>
+                        }
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>

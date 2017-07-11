@@ -52,11 +52,6 @@ namespace TrabFinal___PeRsH.Models
     {
 
         [Required]
-        [RegularExpression("[0-9a-zA-Z]{1,12}",ErrorMessage = "Introduza um Nickname utilizando caratéres alfa-numéricos.")]
-        [Display(Name = "Nickname")]
-        public string Nickname { get; set; }
-
-        [Required]
         [Display(Name = "Email")]
         [EmailAddress]
         public string Email { get; set; }

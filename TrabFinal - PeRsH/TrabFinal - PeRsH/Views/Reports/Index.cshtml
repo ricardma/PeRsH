@@ -1,45 +1,87 @@
 ﻿@model IEnumerable<TrabFinal___PeRsH.Models.Reports>
-
 @{
-    ViewBag.Title = "Index";
+    var numPorVer = Model.Select(x => x.visto).Where(x => x == false).Count();
+    var numVistas = Model.Select(x => x.visto).Where(x => x == true).Count();
 }
 
-<h2>Index</h2>
+<div class="navbar navbar-fixed-left navbar-fixed-bottom" style="background-color:#e0e0e0;height:92%;width:20%">
+    <div class="well" style="background-color:#e0e0e0;border:none">
+        <br />
+        <p style="text-align:center;color:#333333;font-size:2.5vmin"><b>Denúncias das Discussões</b></p>
+        <p style="color:#06569c">Por ver: <span class="badge">@numPorVer</span></p>
+        <p style="color:#06569c">Vistas: <span class="badge">@numVistas</span></p>
+    </div>
+</div>
+<div class="container" style="width:70%;margin-left:25%">
+    <h1 style="color:#06569c">Denúncias das Discussões</h1>
+    <div class="row">
+        <div class="col-lg-2"><label class="label-info">Estado</label></div>
+        <div class="col-lg-2"><label class="label-info">Discussão</label></div>
+        <div class="col-lg-4"><label class="label-info">Razão</label></div>
+        <div class="col-lg-1"><label class="label-info">Delator</label></div>
+        <div class="col-lg-2"><label class="label-info">Visto</label></div>
+        <div class="col-lg-1"><label class="label-info">Eliminar</label></div>
+    </div>
+    <div class="row">
+        @foreach (var item in Model)
+        {
+             var vst = item.visto == false ? "Por ver" : "Pendente";
+            <div class="col-lg-2">
+                @if (vst == "Pendente")
+                {
+                    <span class="glyphicon glyphicon-time"></span><span>@vst</span>
+                }
+                else
+                {
+                    <span class="glyphicon glyphicon-eye-open"></span><span>@vst</span>
+                }
+            </div>
+            <div class="col-lg-2">
+                <span>
+                    @Html.ActionLink(item.Discussoes.conteudo.Length < 15 ? item.Discussoes.conteudo + "..." : item.Discussoes.conteudo.Substring(0, 15) + "...", "PergDisc", "PergDisc", new { id = item.DiscussaoFK }, new { })
+                </span>
+            </div>
+                <div class="col-lg-4">
+                    <span> @item.razRep</span>
+                </div>
+                <div class="col-lg-1">
+                    <span>@Html.ActionLink(item.User.Nickname, "Perfil", "Manage", new { nick = item.User.Nickname })</span>
+                </div>
+            using (Html.BeginForm("VisualizarDiscDenunc", "Reports", new { id = item.DiscussaoFK }))
+            {
+                <div class="col-lg-2">
+                    @{ var chckVist = item.visto == true ? "Checked" : null;
+                        var chckNVist = item.visto == false ? "Checked" : null;}
+                    <input type="radio" value="Visto" checked="@chckVist" onchange="this.form.submit()" />Visto
+                    @if (@vst!="Pendente") {
+                    <input type="radio" value="NVisto" checked="@chckNVist" /><span>Não Visto</span>
+                                }
+                </div>
+                        }
+                        using (Html.BeginForm("Delete", "Discussoes", new { id = item.DiscussaoFK }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <div>
+                                <button type="button" data-toggle="modal" data-target="#confirmDeleteDisc">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                                <div id="confirmDeleteDisc" class="modal fade" role="alert" style="text-align:center;overflow-y:hidden;">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content" style="background-color:#f5f5f5">
+                                            <div class="modal-header" style="">
+                                                <h1 class="modal-title" style="color:#06569c">Eliminar esta discussão</h1>
+                                            </div>
+                                            <div class="modal-body">
+                                                <span>Tem a certeza que pretende eliminar esta discussão?</span>
+                                            </div>
+                                            <button type="submit" class="btn btn-lg btn-info" style="background-color:#06569c;border:none">Eliminar</button>
+                                            @Html.ActionLink("Voltar atrás", "Index", "Reports", null, new { @class = "btn btn-lg btn-info", @style = "background-color:#06569c;color:white;border:none" })
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            }
+                        }
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Discussoes.titulo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User.Nickname)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.razRep)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Discussoes.titulo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User.Nickname)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.razRep)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.RepId }) |
-            @Html.ActionLink("Details", "Details", new { id=item.RepId }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.RepId })
-        </td>
-    </tr>
-}
-
-</table>
+    </div>
+</div>
