@@ -53,11 +53,18 @@ namespace TrabFinal___PeRsH.Controllers
         // POST: Reports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// cria um report a uma DISCUSSAO
+        /// </summary>
+        /// <param name="textAreaReportDisc"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(string textAreaReportDisc, int? id)
         {
             int idDisc = Convert.ToInt32(id);
+            //se a razão do REPORT não for nulo ou vazio
             if (!string.IsNullOrEmpty(textAreaReportDisc))
             {
                 Reports rep = new Reports();
@@ -133,6 +140,11 @@ namespace TrabFinal___PeRsH.Controllers
             return View(reports);
         }
 
+        /// <summary>
+        /// marca um REPORT como visto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult VisualizarDiscDenunc(int id)

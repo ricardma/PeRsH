@@ -51,12 +51,19 @@ namespace TrabFinal___PeRsH.Controllers
         // POST: Comentarios/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// Recebe como parâmetro o id da DISCUSSAO e o que pretende que seja comentado para criar um novo COMENTARIO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="textArea"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(int? id,string textArea)
         {
             int idDisc = Convert.ToInt32(id);
             Comentarios coment = new Comentarios();
+            //caso o conteúdo da string "textArea" não seja nulo ou vazio
             if (!string.IsNullOrEmpty(textArea))
             {
                 coment.conteudo = textArea;
@@ -128,13 +135,21 @@ namespace TrabFinal___PeRsH.Controllers
 
         // POST: Comentarios/Delete/5
         //[HttpPost, ActionName("Delete")]
+        /// <summary>
+        /// apaga um COMENTARIO através do seu id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id)
         {
+            //procura na base de dados o COMENTARIO através do seu id
             Comentarios comentarios = db.Comentarios.Find(id);
+            //remove o COMENTARIO encontrado anteriormente
             db.Comentarios.Remove(comentarios);
+            //grava as mundanças na base de dados
             db.SaveChanges();
             return RedirectToAction("Index","ComentReports");
         }

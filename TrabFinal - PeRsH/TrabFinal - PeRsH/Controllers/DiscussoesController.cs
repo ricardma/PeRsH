@@ -53,17 +53,28 @@ namespace TrabFinal___PeRsH.Controllers
         // POST: Discussoes/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// cria uma DISCUSSAO com o título desejado pelo utilizador e o seu conteúdo, nos TEMAS selecionados na checkbox da view
+        /// </summary>
+        /// <param name="discussoes"></param>
+        /// <param name="id"></param>
+        /// <param name="checkbox"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "idDiscussao,titulo,conteudo")] Discussoes discussoes, int? id,string[] checkbox)
         {
             int idT = 0;
+            //caso haja alguma TEMA escolhido
             try
             {
+                //para cada TEMA escolhido na checkbox
                 foreach (var item in checkbox)
                 {
                     idT = Convert.ToInt32(item);
+                    //procura o id do TEMA na tabela respetiva
                     Temas tema = db.Temas.Select(x => x).Where(x => x.idTema == idT).FirstOrDefault();
+                    //adiciona ao relacionamento de M-M
                     discussoes.TemasDiscussoes.Add(tema);
                 }
                 discussoes.avaliacao = 0;
@@ -78,6 +89,7 @@ namespace TrabFinal___PeRsH.Controllers
                     return RedirectToAction("PergDisc", "PergDisc", new { id = id });
                 }
             }
+            //senão houver TEMA escolhido
             catch (Exception)
             {
                 IEnumerable<Temas> temas = db.Temas.ToList();
@@ -140,6 +152,11 @@ namespace TrabFinal___PeRsH.Controllers
 
         // POST: Discussoes/Delete/5
         //[HttpPost, ActionName("Delete")]
+        /// <summary>
+        /// apaga uma DISCUSSAO
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpPost]
         [Authorize(Roles="Admin")]
         [ValidateAntiForgeryToken]

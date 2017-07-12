@@ -53,9 +53,16 @@ namespace TrabFinal___PeRsH.Controllers
         // POST: ComentReports/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        /// <summary>
+        /// cria uma nova denúncia de um COMENTARIO através do id da DISCUSSAO e do COMENTARIO
+        /// </summary>
+        /// <param name="textAreaReportComent"></param>
+        /// <param name="idDisc"></param>
+        /// <param name="idComent"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(string textAreaReportComent, int? idDisc, int idComent)
+        public ActionResult Create(int? idDisc, int idComent)
             {
             int idD = Convert.ToInt32(idDisc);
             int idC = Convert.ToInt32(idComent);
@@ -105,12 +112,19 @@ namespace TrabFinal___PeRsH.Controllers
             return View(comentReports);
         }
 
+        /// <summary>
+        /// modifica o estado de uma denúncia a um COMENTARIO de não visto para visto
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult VisualizarComentDenunc(int id)
         {
             ViewBag.comentarios = db.Comentarios.Select(x => x);
+            //procura o COMENTARIO com o id passado por parâmetro
             ComentReports rep = db.ComentReports.Select(x => x).Where(x => x.ComentariosFK == id).FirstOrDefault();
+            //modifica o estado da variável "visto" para true
             rep.visto = true;
             db.SaveChanges();
             var reports = db.ComentReports.Include(r => r.Comentarios).Include(r => r.User);

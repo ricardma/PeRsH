@@ -194,7 +194,7 @@ namespace TrabFinal___PeRsH.Controllers
                 //se o 'mes' for igual a FEVEREIRO...
                 if (mes.Equals("Fevereiro"))
                 {
-                    //caso o 'doa' seja maior que 29
+                    //caso o 'dia' seja maior que 29
                     if (dia > 29)
                     {
                         //cria uma mensagem de erro para o utilizador

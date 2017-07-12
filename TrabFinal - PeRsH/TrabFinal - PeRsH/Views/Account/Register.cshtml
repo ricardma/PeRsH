@@ -86,7 +86,7 @@
     function verifica(id) {
         var txtBox = document.getElementById(id);
         var res = document.getElementById("resultNick");
-        var str = @Html.Raw(Json.Encode(lista));
+        var str = @Html.Raw(Json.Encode(lista));//Retirado de https://stackoverflow.com
         if (!str.includes(txtBox.value)) {
             if (txtBox.value=="") {
                 res.setAttribute("class", "glyphicon glyphicon-remove");
@@ -105,7 +105,7 @@
         function validaEmail(id) {
         var txtBox = document.getElementById(id);
         var res = document.getElementById("textEmail");
-        var str = @Html.Raw(Json.Encode(listaEmails));
+        var str = @Html.Raw(Json.Encode(listaEmails));//Retirado de https://stackoverflow.com
         if (!str.includes(txtBox.value) && txtBox.value.includes(@Html.Raw(Json.Encode("@"))) && txtBox.value.includes(".")) {
             if (txtBox.value == "") {
                 res.setAttribute("class", "glyphicon glyphicon-remove");

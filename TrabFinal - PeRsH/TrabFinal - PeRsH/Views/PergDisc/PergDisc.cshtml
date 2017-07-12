@@ -98,9 +98,11 @@
                                 var numLikesDiscs = Model.likes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Count();
                                 var numDislikesDiscs = Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Count();
                                 var utiValDisc = Model.avaliacao.Select(x => x).Where(x => x.UtilizadorFK == User.Identity.GetUserId()).Where(x => x.ComentarioFK == null).ToList();
+                                //variavel de controlo da avaliacao
                                 bool stateEvaluation;
                                 var likes = Model.likes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
                                 var dislikes = Model.dislikes.Select(x => x).Where(x => x.DiscussaoFK == item.idDiscussao).Where(x => x.ComentarioFK == null).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
+                                //variáveis de controlo para as votações da DISCUSSAO
                                 bool stateVoteDisc = likes.Any() ? true : false;
                                 bool stateVoteDiscDislike = dislikes.Any() ? true : false;
                             }
@@ -225,7 +227,6 @@
             IEnumerable<TrabFinal___PeRsH.Models.Comentarios> listaComentarios = Model.comentarios.OrderByDescending(x => x.comentID).ToList();}
         @foreach (var item in listaComentarios)
         {
-            var nomeBot = "botDenunc" + item.comentID;
             var numLikes = Model.likes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).ToList().Count();
             var numDislikes = Model.dislikes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).ToList().Count();
             var stateOfLike = Model.likes.Select(x => x).Where(x => x.UtilizadorFK == item.UtilizadorFK).ToList();
@@ -234,6 +235,7 @@
             bool stateEvaluationComent;
             var likes = Model.likes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).Where(x => x.DiscussaoFK == item.DiscussaoFK).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
             var dislikes = Model.dislikes.Select(x => x).Where(x => x.ComentarioFK == item.comentID).Where(x => x.DiscussaoFK == item.DiscussaoFK).Where(x => x.UtilizadorFK == User.Identity.GetUserId());
+            //variaveis de controlo dos likes e dislikes
             bool stateLikeComent = likes.Any() ? true : false;
             bool stateDislikeComent = dislikes.Any() ? true : false;
             if (utiAvalComent.Any())
